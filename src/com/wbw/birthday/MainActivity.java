@@ -10,11 +10,10 @@ import java.util.HashMap;
 
 
 
-
-
 import com.wbw.birthday.widget.BorderText;
 import com.wbw.birthday.widget.BorderTextView;
 import com.wbw.birthday.widget.CalendarView;
+import com.wbw.birthday.widget.MyAnimation;
 
 import android.os.Bundle;
 import android.annotation.SuppressLint;
@@ -44,8 +43,10 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
@@ -100,8 +101,29 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
         
 		topText = (BorderText) findViewById(R.id.schedule_toptext);
 		addTextToTopTextView(topText);
+		
+		addMenu();
 	}
 	
+	private RelativeLayout relate_level2;
+	private boolean areLevel2Showing = true;
+	private ImageButton home;
+	private void addMenu(){
+		relate_level2 = (RelativeLayout) findViewById(R.id.relate_level2);
+		//relate_level3 = (RelativeLayout) findViewById(R.id.relate_level3);
+		home = (ImageButton) findViewById(R.id.home);
+		home.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (!areLevel2Showing) {
+					MyAnimation.startAnimationsIn(relate_level2, 500);
+				} else {				
+					MyAnimation.startAnimationsOut(relate_level2, 500, 0);					
+				}
+				areLevel2Showing = !areLevel2Showing;
+			}
+		});
+	}
 	
 
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,

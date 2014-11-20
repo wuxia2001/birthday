@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The default background of the menu. -->
+    <color name="md__defaultBackground">#FF555555</color>
+    <color name="transparent">#00000000</color>
+    <color name="gainsboro">#DCDCDC</color>
+    <color name="orangered">#DE5A31</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="light_black">#2B333F</color>
+    <color name="skyblue">#13ACD4</color>
+    <color name="grey">#bfbcbb</color>
+    <color name="red">#D6251D</color>
+    <color name="darkgrey">#EFEFEF</color>
+    <color name="dividing_line">#C2BFBE</color>
+    <color name="light_blue">#0081CC</color>
+    <color name="light_blue_selected">#007AC1</color>
+    <color name="mission_type_item_icon_bg">#2B333F</color>
+    <color name="mission_type_item_bg">#E6E7E7</color>
+    <color name="light_grey">#6B6B6B</color>
+    <color name="mission_type_item_bg_pressed">#D0D2D3</color>
+    <color name="points_listview_bg">#e6e7e7</color>
+    <color name="points_listview_select">#d0d2d3</color>
+    <color name="points_listview_textbg">#58595b</color>
+    <color name="light_white">#FCFCFC</color>
+    <color name="address_text_blue">#7fcff4</color>
+    <color name="address_text_grey">#a6a6a6</color>
+    <color name="title_text_blue">#009feb</color>
+    <color name="pop_points_blue">#00a0e9</color>
+    <color name="holo_blue">#FF33E5B5</color>
+</resources>
