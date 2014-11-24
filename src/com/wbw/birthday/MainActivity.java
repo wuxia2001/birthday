@@ -7,12 +7,18 @@ import java.util.HashMap;
 
 
 
+
+
+
+
 import com.wbw.birthday.effect.MyAnimation;
 import com.wbw.birthday.effect.TouchLight_dark;
 import com.wbw.birthday.effect.TouchLight_light;
 import com.wbw.birthday.widget.BorderText;
 import com.wbw.birthday.widget.BorderTextView;
 import com.wbw.birthday.widget.CalendarView;
+import com.wbw.birthday.widget.dialog.ExitDialog;
+import com.wbw.birthday.widget.dialog.TimerPickDialog;
 
 import android.os.Bundle;
 import android.R.bool;
@@ -33,6 +39,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,6 +65,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 import android.widget.AbsListView.LayoutParams;
 import android.widget.AdapterView.OnItemClickListener;
@@ -74,7 +82,7 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 	private GestureDetector gestureDetector = null;
 	private CalendarView calV = null;
 	private GridView gridView = null;
-	private BorderText topText = null;
+	private TextView topText = null;
 	private Drawable draw = null;
 	private BorderTextView schdule_tip;
 	private Button add;
@@ -101,19 +109,25 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
     	month_c = Integer.parseInt(currentDate.split("-")[1]);
     	day_c = Integer.parseInt(currentDate.split("-")[2]);
     	gestureDetector = new GestureDetector(this);
-        flipper = (ViewFlipper) findViewById(R.id.flipper);
-        flipper.removeAllViews();
-        calV = new CalendarView(this, getResources(),jumpMonth,jumpYear,year_c,month_c,day_c);
-        
-        addGridView();
-        gridView.setAdapter(calV);
-        //flipper.addView(gridView);
-        flipper.addView(gridView,0);
-        
-		topText = (BorderText) findViewById(R.id.schedule_toptext);
-		addTextToTopTextView(topText);
-		
-		addMenu();
+    	createView();
+	}
+	
+	private void createView(){
+		  flipper = (ViewFlipper) findViewById(R.id.flipper);
+	        flipper.removeAllViews();
+	        calV = new CalendarView(this, getResources(),jumpMonth,jumpYear,year_c,month_c,day_c);
+	        
+	        addGridView();
+	        gridView.setAdapter(calV);
+	        //flipper.addView(gridView);
+	        flipper.addView(gridView,0);
+	        
+			topText = (TextView) findViewById(R.id.schedule_toptext);
+			addTextToTopTextView(topText);
+			
+			addMenu();
+			
+			
 	}
 	
 	private RelativeLayout relate_level2;
@@ -137,29 +151,43 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 			@Override
 			public void onClick(View v) {
 				if (!areLevel2Showing) {
+					//要显示
 					MyAnimation.startAnimationsIn(relate_level2, 500);
-				} else {				
-					MyAnimation.startAnimationsOut(relate_level2, 500, 0);					
-				}
-				areLevel2Showing = !areLevel2Showing;
-				if(isleftshowing){
-					//显示中，要隐藏
-					MyAnimation.startAnimationsHide(birthday_goin,500,
-							MainActivity.this,R.anim.push_right_out);
-				}else{
 					MyAnimation.startAnimationsShow(birthday_goin,500,
 							MainActivity.this,R.anim.push_right_in);
-				}
-				isleftshowing = !isleftshowing;
-				if(isrightshowing){
-					//显示中，要隐藏
-					MyAnimation.startAnimationsHide(config_goin,500,
-							MainActivity.this,R.anim.push_left_out);
-				}else{
+					isleftshowing = true;
 					MyAnimation.startAnimationsShow(config_goin,500,
 							MainActivity.this,R.anim.push_left_in);
+					isrightshowing = true;
+				} else {	
+					//显示中，要隐藏
+					MyAnimation.startAnimationsOut(relate_level2, 500, 0);	
+					MyAnimation.startAnimationsHide(birthday_goin,500,
+							MainActivity.this,R.anim.push_right_out);
+					isleftshowing = false;
+					MyAnimation.startAnimationsHide(config_goin,500,
+							MainActivity.this,R.anim.push_left_out);
+					isrightshowing = false;
 				}
-				isrightshowing = !isrightshowing;
+				areLevel2Showing = !areLevel2Showing;
+//				if(isleftshowing){
+//					//显示中，要隐藏
+//					MyAnimation.startAnimationsHide(birthday_goin,500,
+//							MainActivity.this,R.anim.push_right_out);
+//				}else{
+//					MyAnimation.startAnimationsShow(birthday_goin,500,
+//							MainActivity.this,R.anim.push_right_in);
+//				}
+//				isleftshowing = !isleftshowing;
+//				if(isrightshowing){
+//					//显示中，要隐藏
+//					MyAnimation.startAnimationsHide(config_goin,500,
+//							MainActivity.this,R.anim.push_left_out);
+//				}else{
+//					MyAnimation.startAnimationsShow(config_goin,500,
+//							MainActivity.this,R.anim.push_left_in);
+//				}
+//				isrightshowing = !isrightshowing;
 			}
 		});
 		iv_goto.setOnTouchListener(TouchLight_light.init());
@@ -171,6 +199,7 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				actionMenu(type_today);
+				 hideAllMenu();
 			}
 		});
 		iv_goto.setOnClickListener(new OnClickListener() {
@@ -179,6 +208,7 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				actionMenu(type_goto);
+				 hideAllMenu();
 			}
 		});
 		iv_convert.setOnClickListener(new OnClickListener() {
@@ -187,8 +217,21 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				actionMenu(type_convert);
+				 hideAllMenu();
 			}
 		});
+	}
+	
+	//菜单里的当有一个按钮按下时，代表己选择了子项，所有的全部隐藏
+	private void hideAllMenu(){
+		areLevel2Showing = false;
+		MyAnimation.startAnimationsOut(relate_level2, 500, 0);	
+		MyAnimation.startAnimationsHide(birthday_goin,500,
+				MainActivity.this,R.anim.push_right_out);
+		isleftshowing = false;
+		MyAnimation.startAnimationsHide(config_goin,500,
+				MainActivity.this,R.anim.push_left_out);
+		isrightshowing = false;
 	}
 	
 	private final int type_today = 1,type_goto=2,type_convert = 3;
@@ -225,45 +268,7 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
         	break;
         case type_goto:
         	
-        	new DatePickerDialog(this, new OnDateSetListener() {
-				
-				
-				public void onDateSet(DatePicker view, int year, int monthOfYear,
-						int dayOfMonth) {
-					//1901-1-1 ----> 2049-12-31
-					if(year < 1901 || year > 2049){
-						//不在查询范围内
-						new AlertDialog.Builder(mContext).setTitle("错误日期").setMessage("跳转日期范围(1901/1/1-2049/12/31)").setPositiveButton("确认", null).show();
-					}else{
-						int gvFlag = 0;
-						addGridView();   //添加一个gridView
-			        	calV = new CalendarView(mContext, mContext.getResources(),year,monthOfYear+1,dayOfMonth);
-				        gridView.setAdapter(calV);
-				        addTextToTopTextView(topText);
-				        gvFlag++;
-				        flipper.addView(gridView,gvFlag);
-				        if(year == year_c && monthOfYear+1 == month_c){
-				        	//nothing to do
-				        }
-				        if((year == year_c && monthOfYear+1 > month_c) || year > year_c ){
-				        	MainActivity.this.flipper.setInAnimation(AnimationUtils.loadAnimation(MainActivity.this,R.anim.push_left_in));
-				        	MainActivity.this.flipper.setOutAnimation(AnimationUtils.loadAnimation(MainActivity.this,R.anim.push_left_out));
-				        	MainActivity.this.flipper.showNext();
-				        }else{
-				        	MainActivity.this.flipper.setInAnimation(AnimationUtils.loadAnimation(MainActivity.this,R.anim.push_right_in));
-				        	MainActivity.this.flipper.setOutAnimation(AnimationUtils.loadAnimation(MainActivity.this,R.anim.push_right_out));
-				        	MainActivity.this.flipper.showPrevious();
-				        }
-				        flipper.removeViewAt(0);
-				        //跳转之后将跳转之后的日期设置为当期日期
-				        year_c = year;
-						month_c = monthOfYear+1;
-						day_c = dayOfMonth;
-						jumpMonth = 0;
-						jumpYear = 0;
-					}
-				}
-			},year_c, month_c-1, day_c).show();
+        	timePickDialog();
         	break;
         	
         case type_convert:
@@ -276,45 +281,122 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 	
 	}
 	
+	private Dialog timerPickDialog;
+	private void timePickDialog(){
+		LayoutInflater inf = LayoutInflater.from(mContext); 		
+		final View view = inf.inflate(R.layout.dialog_timepick, null);  		
+		Button ok = (Button) view.findViewById(R.id.wifi_dialog_ok);
+		Button cancle = (Button) view.findViewById(R.id.wifi_dialog_cancle);	
+		final DatePicker datePicker = (DatePicker) view.findViewById(R.id.datePicker);
+		datePicker.updateDate(year_c, month_c-1, day_c);
+		final Dialog dialog = new Dialog(mContext, R.style.MyDialog);
+		//dialog.setView(view , 0, 0, 0, 0 );
+		dialog.setContentView(view);		
+		cancle.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO 自动生成的方法存根
+				if(dialog.isShowing())
+					dialog.dismiss();
+			}
+		});
+		
+		ok.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO 自动生成的方法存根
+				 int year = datePicker.getYear();
+				 int month = datePicker.getMonth() ; 
+				 int dayOfMonth = datePicker.getDayOfMonth();
+				 if(year < 1901 || year > 2049){
+						//不在查询范围内
+						new AlertDialog.Builder(mContext).setTitle("错误日期").setMessage("跳转日期范围(1901/1/1-2049/12/31)").setPositiveButton("确认", null).show();
+					}else{
+						int gvFlag = 0;
+						addGridView();   //添加一个gridView
+			        	calV = new CalendarView(mContext, mContext.getResources(),year,month+1,dayOfMonth);
+				        gridView.setAdapter(calV);
+				        addTextToTopTextView(topText);
+				        gvFlag++;
+				        flipper.addView(gridView,gvFlag);
+				        if(year == year_c && month+1 == month_c){
+				        	//nothing to do
+				        }
+				        if((year == year_c && month+1 > month_c) || year > year_c ){
+				        	MainActivity.this.flipper.setInAnimation(AnimationUtils.loadAnimation(MainActivity.this,R.anim.push_left_in));
+				        	MainActivity.this.flipper.setOutAnimation(AnimationUtils.loadAnimation(MainActivity.this,R.anim.push_left_out));
+				        	MainActivity.this.flipper.showNext();
+				        }else{
+				        	MainActivity.this.flipper.setInAnimation(AnimationUtils.loadAnimation(MainActivity.this,R.anim.push_right_in));
+				        	MainActivity.this.flipper.setOutAnimation(AnimationUtils.loadAnimation(MainActivity.this,R.anim.push_right_out));
+				        	MainActivity.this.flipper.showPrevious();
+				        }
+				        flipper.removeViewAt(0);
+				        //跳转之后将跳转之后的日期设置为当期日期
+				        year_c = year;
+						month_c = month+1;
+						day_c = dayOfMonth;
+						jumpMonth = 0;
+						jumpYear = 0;
+					}
+				if(dialog.isShowing())
+					dialog.dismiss();
+			}
+		});
+		dialog.show();
+		
+	}
+	
 
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 			float velocityY) {
 		int gvFlag = 0;         //每次添加gridview到viewflipper中时给的标记
 		if (e1.getX() - e2.getX() > 50) {
             //像左滑动
-			addGridView();   //添加一个gridView
-			jumpMonth++;     //下一个月
-			
-			calV = new CalendarView(this, getResources(),jumpMonth,jumpYear,year_c,month_c,day_c);
-	        gridView.setAdapter(calV);
-	        //flipper.addView(gridView);
-	        addTextToTopTextView(topText);
-	        gvFlag++;
-	        flipper.addView(gridView, gvFlag);
-			this.flipper.setInAnimation(AnimationUtils.loadAnimation(this,R.anim.push_left_in));
-			this.flipper.setOutAnimation(AnimationUtils.loadAnimation(this,R.anim.push_left_out));
-			this.flipper.showNext();
-			flipper.removeViewAt(0);
+			gotoLeft(gvFlag);
 			return true;
 		} else if (e1.getX() - e2.getX() < -50) {
             //向右滑动
-			addGridView();   //添加一个gridView
-			jumpMonth--;     //上一个月
-			
-			calV = new CalendarView(this, getResources(),jumpMonth,jumpYear,year_c,month_c,day_c);
-	        gridView.setAdapter(calV);
-	        gvFlag++;
-	        addTextToTopTextView(topText);
-	        //flipper.addView(gridView);
-	        flipper.addView(gridView,gvFlag);
-	        
-			this.flipper.setInAnimation(AnimationUtils.loadAnimation(this,R.anim.push_right_in));
-			this.flipper.setOutAnimation(AnimationUtils.loadAnimation(this,R.anim.push_right_out));
-			this.flipper.showPrevious();
-			flipper.removeViewAt(0);
+			gotoRight(gvFlag);
 			return true;
 		}
 		return false;
+	}
+	
+	//向左滑动
+	private void gotoLeft(int gvFlag){
+		addGridView();   //添加一个gridView
+		jumpMonth++;     //下一个月
+		
+		calV = new CalendarView(this, getResources(),jumpMonth,jumpYear,year_c,month_c,day_c);
+        gridView.setAdapter(calV);
+        //flipper.addView(gridView);
+        addTextToTopTextView(topText);
+        gvFlag++;
+        flipper.addView(gridView, gvFlag);
+		this.flipper.setInAnimation(AnimationUtils.loadAnimation(this,R.anim.push_left_in));
+		this.flipper.setOutAnimation(AnimationUtils.loadAnimation(this,R.anim.push_left_out));
+		this.flipper.showNext();
+		flipper.removeViewAt(0);
+	}
+	
+	private void gotoRight(int gvFlag){
+		addGridView();   //添加一个gridView
+		jumpMonth--;     //上一个月
+		
+		calV = new CalendarView(this, getResources(),jumpMonth,jumpYear,year_c,month_c,day_c);
+        gridView.setAdapter(calV);
+        gvFlag++;
+        addTextToTopTextView(topText);
+        //flipper.addView(gridView);
+        flipper.addView(gridView,gvFlag);
+        
+		this.flipper.setInAnimation(AnimationUtils.loadAnimation(this,R.anim.push_right_in));
+		this.flipper.setOutAnimation(AnimationUtils.loadAnimation(this,R.anim.push_right_out));
+		this.flipper.showPrevious();
+		flipper.removeViewAt(0);
 	}
 
 	public boolean onTouchEvent(MotionEvent event) {
@@ -357,8 +439,8 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 	 * */
 	public void addTextToTopTextView(TextView view){
 		StringBuffer textDate = new StringBuffer();
-		draw = getResources().getDrawable(R.drawable.schedule_title_bg);
-		view.setBackgroundDrawable(draw);
+		//draw = getResources().getDrawable(R.drawable.schedule_title_bg);
+		//view.setBackgroundDrawable(draw);
 		textDate.append(calV.getShowYear()).append("年").append(
 				calV.getShowMonth()).append("月").append("\t");
 		if (!calV.getLeapMonth().equals("") && calV.getLeapMonth() != null) {
@@ -401,20 +483,22 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
         
 		gridView = new GridView(this);
 		gridView.setNumColumns(7);
-		gridView.setColumnWidth(46);
-	//	gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
-		if(Width == 480 && Height == 800){
-			gridView.setColumnWidth(69);
-		}else if(Width==800&&Height==1280){
-			gridView.setColumnWidth(69);
-		}
+//		gridView.setColumnWidth(46);
+//	//	gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
+//		if(Width == 480 && Height == 800){
+//			gridView.setColumnWidth(69);
+//		}else if(Width==800&&Height==1280){
+//			gridView.setColumnWidth(69);
+//		}
+		gridView.setColumnWidth(Width/7);
 		
 		
 		gridView.setGravity(Gravity.CENTER_VERTICAL);
 		gridView.setSelector(new ColorDrawable(Color.TRANSPARENT)); // 去除gridView边框
 		gridView.setVerticalSpacing(1);
 		gridView.setHorizontalSpacing(1);
-        gridView.setBackgroundResource(R.drawable.gridview_bk);
+        //gridView.setBackgroundResource(R.drawable.gridview_bk);
+		gridView.setBackgroundResource(R.drawable.bg);
 		gridView.setOnTouchListener(new OnTouchListener() {
             //将gridview中的触摸事件回传给gestureDetector
 			
@@ -527,6 +611,21 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 			public boolean onLongClick(View v) {
 				// TODO Auto-generated method stub
 				return false;
+			}
+			
+			
+			@Override
+			public boolean onKeyDown(int keyCode, KeyEvent event) {
+				// TODO 自动生成的方法存根
+				if (keyCode == KeyEvent.KEYCODE_BACK) {
+					Dialog dialog = ExitDialog.init().creatExitDialog(MainActivity.this);
+					dialog.show();
+					return true;
+
+				} else {
+					return super.onKeyDown(keyCode, event);
+				}
+				
 			}
 	
 }
