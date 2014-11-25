@@ -1,5 +1,6 @@
 package com.wbw.birthday;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,9 +12,23 @@ import java.util.HashMap;
 
 
 
+
+
+
+
+
+
+
+import org.xmlpull.v1.XmlPullParserException;
+
+import com.wbw.birthday.data.BirthdayInfoXml;
+import com.wbw.birthday.data.SharedPreferencesXml;
 import com.wbw.birthday.effect.MyAnimation;
 import com.wbw.birthday.effect.TouchLight_dark;
 import com.wbw.birthday.effect.TouchLight_light;
+import com.wbw.birthday.info.BirthdayInfo;
+import com.wbw.birthday.util.Comments;
+import com.wbw.birthday.util.Util;
 import com.wbw.birthday.widget.BorderText;
 import com.wbw.birthday.widget.BorderTextView;
 import com.wbw.birthday.widget.CalendarView;
@@ -21,6 +36,7 @@ import com.wbw.birthday.widget.dialog.ExitDialog;
 import com.wbw.birthday.widget.dialog.TimerPickDialog;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.R.bool;
 import android.R.integer;
 import android.annotation.SuppressLint;
@@ -102,6 +118,8 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		mContext = MainActivity.this;
+		Comments.defaultContext = getApplicationContext();
+		
 		Date date = new Date();
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-d");
     	currentDate = sdf.format(date);  //当期日期
@@ -109,7 +127,54 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
     	month_c = Integer.parseInt(currentDate.split("-")[1]);
     	day_c = Integer.parseInt(currentDate.split("-")[2]);
     	gestureDetector = new GestureDetector(this);
+    	
+    	 //处理外部存储
+		 boolean sdCardExist = Environment.getExternalStorageState()
+				  .equals(android.os.Environment.MEDIA_MOUNTED); //判断sd卡是否存在
+		 if (sdCardExist)
+		 {
+			 String file_path = Environment.getExternalStorageDirectory().toString();
+			 System.out.println("filepa:"+file_path);
+			 Comments.BasePath = file_path+"/CS_SmartHome/";
+		 }
+		 Util.init().creatFileIfNotExist(Comments.BasePath);
+		 firstRun();
+		 getBirthdayInfo();
     	createView();
+	}
+	
+	private void firstRun(){
+		boolean isfirst = Boolean.valueOf(SharedPreferencesXml.init().getConfigSharedPreferences("isfirst", "true"));
+		if(isfirst){
+			//是第一次
+			Util.init().creatFileIfNotExist(Comments.BasePath+Comments.xml_name);
+			SharedPreferencesXml.init().setConfigSharedPreferences("isfirst", "false");
+			try {
+				BirthdayInfoXml.instance().saveBirthdayInfoXml(BirthdayInfo.binfo_list, Comments.BasePath+Comments.xml_name);
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	private void getBirthdayInfo(){
+		try {
+			BirthdayInfoXml.instance().getBirthdayInfoXml(Comments.BasePath+Comments.xml_name);
+		} catch (XmlPullParserException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private void createView(){
