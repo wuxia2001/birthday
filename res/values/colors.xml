@@ -29,4 +29,10 @@
     <color name="pop_points_blue">#00a0e9</color>
     <color name="holo_blue">#FF33E5B5</color>
        <color name="wifidialog_normal_text_color">#5b4730</color>
+           <color name="type_title_color">#f4e2c8</color>
+    <color name="type_item_color">#f4e2c8</color>
+       <color name="lblue">#87CEFA</color>
+    <color name="title_color">#f4e2c8</color>
+    <color name="option_color">#a8692b</color>
+
 </resources>

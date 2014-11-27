@@ -2,104 +2,139 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg"
     android:orientation="vertical" >
-    <LinearLayout android:layout_width="match_parent"
-		    android:layout_height="45dp" android:orientation="horizontal"
-		    android:background="@drawable/title_bg1" 
-		    >
-		       <ImageView android:id="@+id/iv_return"
-		         android:layout_width="wrap_content" android:layout_height="wrap_content"
-		        android:layout_marginLeft="15dp" android:background="@drawable/ic_menu_back"
-		        android:layout_gravity="center_vertical"/>
-		    
-		    <TextView
-		      android:id="@+id/tv_title"
-		    android:layout_width="0dp" 
-		    android:layout_height="45dp"
-	        android:gravity="center"     
-	        android:textSize="18sp" 
-	        android:paddingLeft="3dp"
-	        android:paddingRight="3dp"
-	        android:layout_weight="1"
-		/>
-		    <ImageView android:id="@+id/iv_add"
-		        android:layout_width="wrap_content" android:layout_height="wrap_content"
-		        android:layout_marginRight="15dp" android:background="@drawable/add"
-		         android:layout_gravity="center_vertical" />
-     </LinearLayout>
-     
-      <LinearLayout
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/title_bg1"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/iv_return"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/ic_menu_back" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:text="标题"
+            android:textColor="@color/title_color"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/iv_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/add" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
+        android:layout_height="fill_parent"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:background="@drawable/wnl_schedule_detail_bg" >
-		    
-          
-        <TextView
-            android:id="@+id/tv_dayofmonth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|left"
-            android:layout_marginLeft="23dp"
-            android:textColor="@color/white"
-            android:textSize="25sp"
-             >
-        </TextView>
+        android:layout_weight="1"
+        android:background="@drawable/bg_linear"
+        android:orientation="vertical" >
 
-        <RelativeLayout
-             android:id="@+id/layout_right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp" >
-
-            <TextView
-                android:id="@+id/dayofweek"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                android:text="星期"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-
-            <View
-                android:id="@+id/line"
-                android:layout_width="50dp"
-                android:layout_height="3px"
-                android:layout_below="@+id/dayofweek"
-                android:background="@color/white" />
-
-            <TextView
-                android:id="@+id/lunarTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/line"
-                android:text="农历"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-        </RelativeLayout>
-    </LinearLayout>
-    
-          <com.ecology.calenderproj.base.BorderTextView
-            android:id="@+id/schdule_tip"
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="日程安排"
-            android:textSize="18sp" />
-           <ListView 
-            android:id="@+id/schedulelist"
-            android:layout_width="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/message"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tv_dayandmonth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:text="八月十五"
+                android:textColor="@color/white"
+                android:textSize="25sp" >
+            </TextView>
+
+            <LinearLayout
+                android:id="@+id/layout_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|left"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tv_dayofweek"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="星期一"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+                <View
+                    android:id="@+id/line"
+                    android:layout_width="50dp"
+                    android:layout_height="3px"
+                    android:layout_below="@+id/dayofweek"
+                    android:background="@color/white" />
+
+                <TextView
+                    android:id="@+id/tv_lunaryear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/line"
+                    android:text="马年（甲午年）"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_list_title"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:divider="@drawable/list_divider_line"
-           android:background="@drawable/schedule_input_bg">
-            
-            </ListView>
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/list_view_sigle_item_bg"
+            android:ellipsize="marquee"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
+            android:text="@string/noanpai"
+            android:textColor="@color/type_item_color"
+            android:textSize="17sp" />
+
+        <ListView
+            android:id="@+id/lv_list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="45dp"
+            android:cacheColorHint="#00000000"
+            android:dividerHeight="0px"
+            android:drawSelectorOnTop="false"
+            android:gravity="center_horizontal"
+            android:listSelector="#00000000" >
+        </ListView>
+    </LinearLayout>
 
 </LinearLayout>

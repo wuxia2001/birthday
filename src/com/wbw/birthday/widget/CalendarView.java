@@ -186,14 +186,16 @@ public class CalendarView extends BaseAdapter {
 		//textView.setTextColor(R.color.little_grey);
 		textView.setTextColor(Color.RED);
 		
+		drawable = res.getDrawable(R.drawable.item);
+		textView.setBackgroundDrawable(drawable);
+		
 		// 当前月字体属性，设字体和背景
 		if (position < daysOfMonth + firstDayOfMonth+7 && position >= firstDayOfMonth+7) {
 			
 			
 			
 			textView.setTextColor(Color.BLACK);// 当月字体设黑
-			drawable = res.getDrawable(R.drawable.item);
-			textView.setBackgroundDrawable(drawable);
+			
 			//textView.setBackgroundColor(Color.WHITE);
 			//星期一和星期六加红
 			if(position%7==0||position%7==6){

@@ -28,6 +28,7 @@
 	        android:paddingLeft="3dp"
 	        android:paddingRight="3dp"
 	        android:layout_weight="1"
+	        android:textColor="@color/title_color" 
 		/>
 		    <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
 		        android:layout_marginRight="15dp" android:background="@drawable/arrow_right"

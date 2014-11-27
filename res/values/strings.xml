@@ -10,4 +10,8 @@
 	<string name="OK">确定</string>
 	<string name="cancle">取消</string>
 	<string name="set_date">选择日期</string>
+	<string name="nongli">农历</string>
+	<string name="noanpai">暂无安排</string>
+	<string name="input_name">请输入日程名称</string>
+	<string name="input_remark">备注，请输入日程内容或其他信息</string>
 </resources>

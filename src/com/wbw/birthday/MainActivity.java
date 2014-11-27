@@ -69,6 +69,7 @@ import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -112,6 +113,7 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 	private String dateInfo;//点击gridview的日期信息
 	private LayoutInflater inflater;
 	private Context mContext;
+	private  ArrayList<String> scheduleDate;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -515,7 +517,7 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 		textDate.append(calV.getAnimalsYear()).append("年").append("(").append(
 				calV.getCyclical()).append("年)");
 		view.setText(textDate);
-		view.setTextColor(Color.WHITE);
+		//view.setTextColor(Color.WHITE);
 		view.setTextSize(15.0f);
 		view.setTypeface(Typeface.DEFAULT_BOLD);
 	}
@@ -532,6 +534,18 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 				calV.getCyclical()).append("年)");
 		text.setText(textDate);
 	}
+	
+	//添加农历信息
+		public String getLunarDayInfo(){
+			StringBuffer textDate = new StringBuffer();
+			if (!calV.getLeapMonth().equals("") && calV.getLeapMonth() != null) {
+				textDate.append("闰").append(calV.getLeapMonth()).append("月")
+						.append("\t");
+			}
+			textDate.append(calV.getAnimalsYear()).append("年").append("(").append(
+					calV.getCyclical()).append("年)");
+			return textDate.toString();
+		}
 	
 	//添加gridview,显示具体的日期
 	@SuppressLint("ResourceAsColor")
@@ -585,16 +599,11 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 				  int endPosition = calV.getEndPosition();
 				  if(startPosition <= position  && position <= endPosition){
 					  String scheduleDay = calV.getDateByClickItem(position).split("\\.")[0];  //这一天的阳历
-					  //String scheduleLunarDay = calV.getDateByClickItem(position).split("\\.")[1];  //这一天的阴历
-	                  String scheduleYear = calV.getShowYear();
+					   String scheduleYear = calV.getShowYear();
 	                  String scheduleMonth = calV.getShowMonth();
 	                  String week = "";
 	                 
-	                  Log.i("日程历史浏览", scheduleDay);
-	                  
-	                  //通过日期查询这一天是否被标记，如果标记了日程就查询出这天的所有日程信息
-	                 // scheduleIDs = dao.getScheduleByTagDate(Integer.parseInt(scheduleYear), Integer.parseInt(scheduleMonth), Integer.parseInt(scheduleDay));
-	                  
+	                  Log.i("日程历史浏览", scheduleDay);	               
 	                  //得到这一天是星期几
 	                  switch(position%7){
 	                  case 0:
@@ -619,16 +628,21 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 	                	  week = "星期六";
 	                	  break;
 	                  }
-					 
-	            
-	                	  
-	                  }else{ //如果没有标记位直接则跟换为“暂无安排”
-	                 
-	                	  
-	                	  schdule_tip.setText("暂无安排");
-	                	  listView.setVisibility(View.INVISIBLE);
-	                	
-	                  }	                  
+	                  //前面是得到 了所有的信息
+	                  scheduleDate = new ArrayList<String>();
+	                  scheduleDate.add(scheduleYear);
+	                  scheduleDate.add(scheduleMonth);
+	                  scheduleDate.add(scheduleDay);
+	                  scheduleDate.add(week);
+	                  String chinese_year = getLunarDayInfo();
+	                  scheduleDate.add(chinese_year);
+	                  
+	                  Intent intent = new Intent(MainActivity.this,ListBirthdayActivity.class);
+	                  Bundle b = new Bundle();
+	                  b.putStringArrayList("info",scheduleDate);
+	                  intent.putExtras(b);
+	                  MainActivity.this.startActivity(intent);
+				  }          
 	               
 			}
 		});
