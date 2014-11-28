@@ -13,7 +13,7 @@ public class BirthdayInfo {
 	private int month;  //月+1
 	private int day;    //日
 	private String timeofday;  //hh:MM:ss
-	private int alarmkind;   //提示方式       0分钟前，5分钟前，10分钟前，30分钟前，1小时前，2小时前，5小时间前，10小时前，24小时前
+	private int alarmkind;   //提示方式       0分钟前，10分钟前，30分钟前，1小时前，2小时前，5小时间前
 	private int duplicatekind; //重复方式   一次性活动，每年（阴历几月几，阳历几月几）
 	
 	public static List<BirthdayInfo> binfo_list = new ArrayList<BirthdayInfo>();

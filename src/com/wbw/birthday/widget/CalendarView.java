@@ -380,8 +380,8 @@ public class CalendarView extends BaseAdapter {
 	
 	public String getLeapMonth() {
 		return leapMonth;
-	}
 
+	}
 	public void setLeapMonth(String leapMonth) {
 		this.leapMonth = leapMonth;
 	}

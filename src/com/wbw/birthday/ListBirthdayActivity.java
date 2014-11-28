@@ -9,7 +9,10 @@ import com.wbw.birthday.calender.LunarCalendar;
 
 
 
+
+
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -76,6 +79,19 @@ public class ListBirthdayActivity  extends Activity{
 				// TODO Auto-generated method stub
 			 overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
 				ListBirthdayActivity.this.finish();
+			}
+		});
+		
+		iv_add.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				  Intent intent = new Intent(ListBirthdayActivity.this,AddBirthdayActivity.class);
+                  Bundle b = new Bundle();
+                  b.putStringArrayList("info",scheduleDate);
+                  intent.putExtras(b);
+                  ListBirthdayActivity.this.startActivity(intent);
 			}
 		});
 	}

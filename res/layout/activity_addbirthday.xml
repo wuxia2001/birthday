@@ -31,52 +31,205 @@
             android:textSize="18sp" />
 
         <ImageView
-            android:id="@+id/iv_add"
+            android:id="@+id/iv_complete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="15dp"
-            android:background="@drawable/zi_complete" />
+            android:background="@drawable/zi_complete"
+            android:layout_marginTop="3dp" />
     </LinearLayout>
     
     	 <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" 
-        android:layout_marginBottom="10dp">
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="15dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/wifi_dialog_content_bg"
             android:orientation="vertical"
-            android:layout_marginTop="10dp" android:layout_marginBottom="15dp"
+            android:layout_marginTop="10dp" android:layout_marginBottom="20dp"
             android:layout_marginLeft="3dp" android:layout_marginRight="3dp" >
                <EditText
+                   android:id="@+id/et_inputname"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@drawable/list_view_sigle_item_bg"
                 android:hint="@string/input_name"
-                android:padding="3dp"
+               
                 android:layout_marginLeft="1dp" android:layout_marginRight="1dp"
                 android:layout_marginTop="10dp" android:layout_marginBottom="1dp" 
                   android:textSize="18sp" 
                     android:textColor="@color/type_item_color"
+                    android:paddingLeft="15dp" android:paddingRight="5dp" 
+                    android:paddingTop="3dp" android:paddingBottom="3dp"
                  android:singleLine="true"/>
                
                 <EditText
+                    android:id="@+id/et_inputremark"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@drawable/list_view_sigle_item_bg"
-                android:hint="@string/input_name"
-                android:padding="3dp"
+                android:hint="@string/input_remark"
+                  android:paddingLeft="15dp" android:paddingRight="5dp" 
+                    android:paddingTop="3dp" android:paddingBottom="3dp"
                 android:layout_marginLeft="1dp" android:layout_marginRight="1dp"
                 android:layout_marginTop="10dp" android:layout_marginBottom="1dp" 
-                  android:textSize="18sp"  android:minLines="2"
+                  android:textSize="18sp"  android:minLines="3"
+                  android:lines="3"
                     android:textColor="@color/type_item_color"/>
+                
+                 <TextView
+                     android:id="@+id/tv_selectrili"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/list_view_sigle_item_bg"
+                android:text="@string/select_rili"
+                  android:paddingLeft="15dp" android:paddingRight="5dp" 
+                    android:paddingTop="3dp" android:paddingBottom="3dp"
+                android:layout_marginLeft="1dp" android:layout_marginRight="1dp"
+                android:layout_marginTop="10dp" android:layout_marginBottom="1dp" 
+                  android:textSize="18sp"  
+                  android:singleLine="true" android:gravity="center_vertical"
+                    android:textColor="@color/type_item_color"/>
+                
+        <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:layout_gravity="center" android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp" android:layout_marginTop="3dp" >
+        <Button android:id="@+id/bt_option_gongli"
+            android:layout_width="wrap_content" android:layout_height="50dp" android:gravity="center_horizontal"
+            android:background="@drawable/option" android:text="@string/gongli" android:layout_marginLeft="15dp"
+            android:layout_weight="1" android:textSize="21sp" 
+            android:textColor="@color/option_color" android:paddingTop="5dp"/>
+        <Button android:id="@+id/bt_option_nongli"
+			android:layout_width="wrap_content" android:layout_height="50dp" android:gravity="center_horizontal"
+            android:background="@drawable/option" android:text="@string/nongli" android:layout_weight="1" 
+            android:textSize="21sp" android:layout_marginRight="15dp"
+             android:textColor="@color/option_color" android:paddingTop="5dp"/>
+    	</LinearLayout>
             
-            
+              <TextView
+                  android:id="@+id/tv_select_year"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/list_arrow_sigle_item_bg"
+                android:text="2014年10月11日"
+                  android:paddingLeft="15dp" android:paddingRight="5dp" 
+                    android:paddingTop="3dp" android:paddingBottom="3dp"
+                android:layout_marginLeft="1dp" android:layout_marginRight="1dp"
+                android:layout_marginTop="10dp" android:layout_marginBottom="1dp" 
+                  android:textSize="18sp"  
+                  android:singleLine="true" android:gravity="center_vertical"
+                    android:textColor="@color/type_item_color"/>
+              
+                 <TextView
+                     android:id="@+id/tv_select_hour"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/list_arrow_sigle_item_bg"
+                android:text="22:55:00"
+                  android:paddingLeft="15dp" android:paddingRight="5dp" 
+                    android:paddingTop="3dp" android:paddingBottom="3dp"
+                android:layout_marginLeft="1dp" android:layout_marginRight="1dp"
+                android:layout_marginTop="10dp" android:layout_marginBottom="1dp" 
+                  android:textSize="18sp"  
+                  android:singleLine="true" android:gravity="center_vertical"
+                    android:textColor="@color/type_item_color"/>
+                 
+                      <TextView
+                          android:id="@+id/tv_tixingkind"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/list_view_sigle_item_bg"
+                android:text="@string/tixingkind"
+                  android:paddingLeft="15dp" android:paddingRight="5dp" 
+                    android:paddingTop="3dp" android:paddingBottom="3dp"
+                android:layout_marginLeft="1dp" android:layout_marginRight="1dp"
+                android:layout_marginTop="10dp" android:layout_marginBottom="1dp" 
+                  android:textSize="18sp"  
+                  android:singleLine="true" android:gravity="center_vertical"
+                    android:textColor="@color/type_item_color"/>
+              
+                <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:layout_gravity="center" android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" android:layout_marginTop="3dp" >
+        <Button android:id="@+id/bt_option_0"
+            android:layout_width="0dp" android:layout_height="50dp" android:gravity="center_horizontal"
+            android:background="@drawable/option" android:text="@string/time_0" android:layout_marginLeft="6dp"
+            android:layout_weight="1" android:textSize="19sp" 
+            android:textColor="@color/option_color" android:paddingTop="5dp"/>
+        <Button android:id="@+id/bt_option_1"
+			android:layout_width="0dp" android:layout_height="50dp" android:gravity="center_horizontal"
+            android:background="@drawable/option" android:text="@string/time_10" android:layout_weight="1" 
+            android:textSize="19sp" android:layout_marginRight="0dp"
+             android:textColor="@color/option_color" android:paddingTop="5dp"/>
+         <Button android:id="@+id/bt_option_2"
+			android:layout_width="0dp" android:layout_height="50dp" android:gravity="center_horizontal"
+            android:background="@drawable/option" android:text="@string/time_30" android:layout_weight="1" 
+            android:textSize="19sp" android:layout_marginRight="6dp"
+             android:textColor="@color/option_color" android:paddingTop="5dp"/>
+    	</LinearLayout>
+    	
+                 <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:layout_gravity="center" android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" android:layout_marginTop="3dp" >
+        <Button android:id="@+id/bt_option_3"
+            android:layout_width="0dp" android:layout_height="50dp" android:gravity="center_horizontal"
+            android:background="@drawable/option" android:text="@string/time_1" android:layout_marginLeft="6dp"
+            android:layout_weight="1" android:textSize="19sp" 
+            android:textColor="@color/option_color" android:paddingTop="5dp"/>
+        <Button android:id="@+id/bt_option_4"
+			android:layout_width="0dp" android:layout_height="50dp" android:gravity="center_horizontal"
+            android:background="@drawable/option" android:text="@string/time_2" android:layout_weight="1" 
+            android:textSize="19sp" android:layout_marginRight="0dp"
+             android:textColor="@color/option_color" android:paddingTop="5dp"/>
+         <Button android:id="@+id/bt_option_5"
+			android:layout_width="0dp" android:layout_height="50dp" android:gravity="center_horizontal"
+            android:background="@drawable/option" android:text="@string/time_5" android:layout_weight="1" 
+            android:textSize="19sp" android:layout_marginRight="6dp"
+             android:textColor="@color/option_color" android:paddingTop="5dp"/>
+    	</LinearLayout>
+              
+                       <TextView
+                           android:id="@+id/tv_duplicate"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/list_view_sigle_item_bg"
+                android:text="@string/duplicate"
+                  android:paddingLeft="15dp" android:paddingRight="5dp" 
+                    android:paddingTop="3dp" android:paddingBottom="3dp"
+                android:layout_marginLeft="1dp" android:layout_marginRight="1dp"
+                android:layout_marginTop="10dp" android:layout_marginBottom="1dp" 
+                  android:textSize="18sp"  
+                  android:singleLine="true" android:gravity="center_vertical"
+                    android:textColor="@color/type_item_color"/>
+              
+                <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:layout_gravity="center" android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp" android:layout_marginTop="3dp" android:layout_marginBottom="10dp" >
+        <Button android:id="@+id/bt_option_once"
+            android:layout_width="wrap_content" android:layout_height="50dp" android:gravity="center_horizontal"
+            android:background="@drawable/option" android:text="@string/only_once" android:layout_marginLeft="5dp"
+            android:layout_weight="1" android:textSize="16sp" 
+            android:textColor="@color/option_color" android:paddingTop="5dp"/>
+        <Button android:id="@+id/bt_option_everyyear"
+			android:layout_width="wrap_content" android:layout_height="50dp" android:gravity="center_horizontal"
+            android:background="@drawable/option" android:text="@string/everty_year" android:layout_weight="1" 
+            android:textSize="16sp" android:layout_marginRight="5dp"
+             android:textColor="@color/option_color" android:paddingTop="5dp"/>
+     
+    	</LinearLayout>
+              
             </LinearLayout>
             
         </ScrollView>

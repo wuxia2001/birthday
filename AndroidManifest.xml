@@ -26,6 +26,10 @@
 			android:windowSoftInputMode="adjustPan|stateHidden"
 			android:launchMode="singleTask" 
 			android:configChanges="orientation|keyboardHidden"/>
+          <activity android:name=".AddBirthdayActivity"  android:theme="@android:style/Theme.NoTitleBar"
+			android:windowSoftInputMode="adjustPan|stateHidden"
+			android:launchMode="singleTask" 
+			android:configChanges="orientation|keyboardHidden"/>
     </application>
 
 </manifest>

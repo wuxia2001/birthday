@@ -14,4 +14,18 @@
 	<string name="noanpai">暂无安排</string>
 	<string name="input_name">请输入日程名称</string>
 	<string name="input_remark">备注，请输入日程内容或其他信息</string>
+	<string name="select_rili">你选择日历种类是：%s</string>
+	<string name="gongli">公历</string>
+	<string name="tixingkind">你选择的是%s提醒</string>
+	<string name="time_0">0分钟前</string>
+	<string name="time_10">10分钟前</string>
+	<string name="time_30">30分钟前</string>
+	<string name="time_1">1小时前</string>
+	<string name="time_2">2小时前</string>
+	<string name="time_5">5小时间前</string>
+	<string name="duplicate">重复方式是%s</string>
+	<string name="only_once">一次性活动</string>
+	<string name="everty_year">每年%1$s%2$s</string>
+	
+	
 </resources>
