@@ -29,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -81,6 +82,8 @@ public class CalendarView extends BaseAdapter {
 	private String sch_month = "";
 	private String sch_day = "";
 	
+	private int screenwidth;
+	
 	public CalendarView(){
 		Date date = new Date();
 		sysDate = sdf.format(date);  //当期日期
@@ -90,13 +93,14 @@ public class CalendarView extends BaseAdapter {
 		
 	}
 	
-	public CalendarView(Context context,Resources rs,int jumpMonth,int jumpYear,int year_c,int month_c,int day_c){
+	public CalendarView(Context context,Resources rs,int jumpMonth,int jumpYear,
+			int year_c,int month_c,int day_c,int screenwidth){
 		this();
 		this.context= context;
 		specialCalendar = new SpecialCalendar();
 		lunarCalendar = new LunarCalendar();
 		this.res = rs;
-		
+		this.screenwidth = screenwidth;
 		int stepYear = year_c+jumpYear;
 		int stepMonth = month_c+jumpMonth ;
 		if(stepMonth > 0){
@@ -240,7 +244,20 @@ public class CalendarView extends BaseAdapter {
 		if(calendar.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY||calendar.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY){
 			textView.setTextColor(Color.rgb(255, 145, 90));
 		}
+		int lll = convertView.getHeight();
 		
+		int l = textView.getHeight();
+		 LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) textView.getLayoutParams();
+         //lp.height = getScreenWith() / 3 * 4;
+         //首页图片比例，改为1：1  16:9
+		// lp.\
+		 lp.width = screenwidth/7;
+		 
+         lp.height = lp.width+10;
+        // lp.topMargin = 5;
+       //  lp.bottomMargin = 5;
+       //  lp.
+         textView.setLayoutParams(lp);
 		return convertView;
 	}
 	

@@ -179,15 +179,23 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 		}
 	}
 	
+	protected int getScreenWith() {
+        return getResources().getDisplayMetrics().widthPixels;
+    }
+
+	
 	private void createView(){
 		  flipper = (ViewFlipper) findViewById(R.id.flipper);
 	        flipper.removeAllViews();
-	        calV = new CalendarView(this, getResources(),jumpMonth,jumpYear,year_c,month_c,day_c);
+	        int w = getScreenWith();
+	        calV = new CalendarView(this, getResources(),
+	        		jumpMonth,jumpYear,year_c,month_c,day_c,w);
 	        
 	        addGridView();
 	        gridView.setAdapter(calV);
 	        //flipper.addView(gridView);
 	        flipper.addView(gridView,0);
+	        
 	        
 			topText = (TextView) findViewById(R.id.schedule_toptext);
 			addTextToTopTextView(topText);
@@ -315,7 +323,7 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
         	year_c = Integer.parseInt(currentDate.split("-")[0]);
         	month_c = Integer.parseInt(currentDate.split("-")[1]);
         	day_c = Integer.parseInt(currentDate.split("-")[2]);
-        	calV = new CalendarView(this, getResources(),jumpMonth,jumpYear,year_c,month_c,day_c);
+        	calV = new CalendarView(this, getResources(),jumpMonth,jumpYear,year_c,month_c,day_c,getScreenWith());
 	        gridView.setAdapter(calV);
 	        addTextToTopTextView(topText);
 	        gvFlag++;
@@ -437,7 +445,7 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 		addGridView();   //添加一个gridView
 		jumpMonth++;     //下一个月
 		
-		calV = new CalendarView(this, getResources(),jumpMonth,jumpYear,year_c,month_c,day_c);
+		calV = new CalendarView(this, getResources(),jumpMonth,jumpYear,year_c,month_c,day_c,getScreenWith());
         gridView.setAdapter(calV);
         //flipper.addView(gridView);
         addTextToTopTextView(topText);
@@ -453,7 +461,7 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 		addGridView();   //添加一个gridView
 		jumpMonth--;     //上一个月
 		
-		calV = new CalendarView(this, getResources(),jumpMonth,jumpYear,year_c,month_c,day_c);
+		calV = new CalendarView(this, getResources(),jumpMonth,jumpYear,year_c,month_c,day_c,getScreenWith());
         gridView.setAdapter(calV);
         gvFlag++;
         addTextToTopTextView(topText);
@@ -562,6 +570,8 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
         
 		gridView = new GridView(this);
 		gridView.setNumColumns(7);
+		gridView.getHeight();
+		//gridView.
 //		gridView.setColumnWidth(46);
 //	//	gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
 //		if(Width == 480 && Height == 800){
@@ -669,7 +679,7 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 		    	year_c = Integer.parseInt(currentDate.split("-")[0]);
 		    	month_c = Integer.parseInt(currentDate.split("-")[1]);
 		    	day_c = Integer.parseInt(currentDate.split("-")[2]);
-		    	calV = new CalendarView(this, getResources(),jumpMonth,jumpYear,year_c,month_c,day_c);
+		    	calV = new CalendarView(this, getResources(),jumpMonth,jumpYear,year_c,month_c,day_c,getScreenWith());
 		        gridView.setAdapter(calV);
 		        addTextToTopTextView(topText);
 		        gvFlag++;

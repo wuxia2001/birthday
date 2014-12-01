@@ -218,12 +218,12 @@
         android:orientation="horizontal" android:layout_gravity="center" android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp" android:layout_marginTop="3dp" android:layout_marginBottom="10dp" >
         <Button android:id="@+id/bt_option_once"
-            android:layout_width="wrap_content" android:layout_height="50dp" android:gravity="center_horizontal"
+            android:layout_width="wrap_content" android:layout_height="60dp" android:gravity="center_horizontal"
             android:background="@drawable/option" android:text="@string/only_once" android:layout_marginLeft="5dp"
             android:layout_weight="1" android:textSize="16sp" 
             android:textColor="@color/option_color" android:paddingTop="5dp"/>
         <Button android:id="@+id/bt_option_everyyear"
-			android:layout_width="wrap_content" android:layout_height="50dp" android:gravity="center_horizontal"
+			android:layout_width="wrap_content" android:layout_height="60dp" android:gravity="center_horizontal"
             android:background="@drawable/option" android:text="@string/everty_year" android:layout_weight="1" 
             android:textSize="16sp" android:layout_marginRight="5dp"
              android:textColor="@color/option_color" android:paddingTop="5dp"/>
