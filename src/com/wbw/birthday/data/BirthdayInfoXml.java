@@ -112,27 +112,27 @@ public class BirthdayInfoXml {
 			seria.endTag(null, "remark");
 			
 			seria.startTag(null, "kind");
-			seria.text(info_n.getName());	
+			seria.text(String.valueOf(info_n.getKind()));	
 			seria.endTag(null, "kind");
 			
 			seria.startTag(null, "year");
-			seria.text(info_n.getName());	
+			seria.text(String.valueOf(info_n.getYear()));	
 			seria.endTag(null, "year");
 			
 			seria.startTag(null, "month");
-			seria.text(info_n.getName());	
+			seria.text(String.valueOf(info_n.getMonth()));	
 			seria.endTag(null, "month");
 			
 			seria.startTag(null, "day");
-			seria.text(info_n.getName());	
+			seria.text(String.valueOf(info_n.getDay()));	
 			seria.endTag(null, "day");
 			
 			seria.startTag(null, "timeofday");
-			seria.text(info_n.getName());	
+			seria.text(info_n.getTimeofday());	
 			seria.endTag(null, "timeofday");
 			
 			seria.startTag(null, "alarmkind");
-			seria.text(info_n.getName());	
+			seria.text(String.valueOf(info_n.getAlarmkind()));	
 			seria.endTag(null, "alarmkind");
 				
 				

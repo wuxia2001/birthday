@@ -19,6 +19,8 @@ import java.util.HashMap;
 
 
 
+
+
 import org.xmlpull.v1.XmlPullParserException;
 
 import com.wbw.birthday.data.BirthdayInfoXml;
@@ -68,6 +70,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
@@ -88,6 +91,7 @@ import android.widget.AbsListView.LayoutParams;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class MainActivity extends Activity implements OnGestureListener,OnClickListener,OnLongClickListener {
+    private AnimationSet mModalInAnim;
 	private static final String Tag="CalendarActivity";
 	private static int jumpMonth = 0;      //每次滑动，增加或减去一个月,默认为0（即显示当前月）
 	private static int jumpYear = 0;       //滑动跨越一年，则增加或者减去一年,默认为0(即当前年)
@@ -130,6 +134,10 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
     	day_c = Integer.parseInt(currentDate.split("-")[2]);
     	gestureDetector = new GestureDetector(this);
     	
+    	   mModalInAnim = (AnimationSet) Util.init().loadAnimation(this, R.anim.modal_in);
+		      
+   		
+    	
     	 //处理外部存储
 		 boolean sdCardExist = Environment.getExternalStorageState()
 				  .equals(android.os.Environment.MEDIA_MOUNTED); //判断sd卡是否存在
@@ -137,7 +145,7 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 		 {
 			 String file_path = Environment.getExternalStorageDirectory().toString();
 			 System.out.println("filepa:"+file_path);
-			 Comments.BasePath = file_path+"/CS_SmartHome/";
+			 Comments.BasePath = file_path+"/birthday/";
 		 }
 		 Util.init().creatFileIfNotExist(Comments.BasePath);
 		 firstRun();
@@ -420,6 +428,8 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 					dialog.dismiss();
 			}
 		});
+		View mDialogView = dialog.getWindow().getDecorView().findViewById(android.R.id.content);
+		 mDialogView.startAnimation(mModalInAnim);
 		dialog.show();
 		
 	}
@@ -708,6 +718,8 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 				// TODO 自动生成的方法存根
 				if (keyCode == KeyEvent.KEYCODE_BACK) {
 					Dialog dialog = ExitDialog.init().creatExitDialog(MainActivity.this);
+					View mDialogView = dialog.getWindow().getDecorView().findViewById(android.R.id.content);
+					 mDialogView.startAnimation(mModalInAnim);
 					dialog.show();
 					return true;
 

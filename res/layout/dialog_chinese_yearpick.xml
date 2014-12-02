@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@drawable/wifi_dialog_bg">
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:layout_weight="1" android:background="@drawable/wifi_dialog_content_bg"
+        android:orientation="vertical">
+        	<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+        	    android:layout_marginTop="5dp" android:layout_marginBottom="7dp" android:orientation="horizontal"
+        	    android:layout_gravity="center" android:gravity="center" >
+        	      <ImageView android:id="@+id/list_item_config"  
+					android:layout_width="wrap_content" 
+					android:layout_height="wrap_content"			
+					android:layout_gravity="right|center"	
+					android:maxWidth="28dp"
+					android:maxHeight="28dp"
+					android:adjustViewBounds="true"
+					android:background="@drawable/goto_title"
+					android:layout_marginRight="3dp"
+					/>		
+        	     <TextView android:id="@+id/wifi_title_tv" android:text="@string/set_date"
+					android:layout_height="wrap_content"  android:layout_width="wrap_content" android:textSize="20sp"
+					android:gravity="center" android:layout_marginBottom="2dp"
+					android:textColor="@color/wifidialog_normal_text_color"
+					 android:textAppearance="?android:attr/textAppearanceMedium" />
+        	</LinearLayout>
+       
+        	<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+        	    android:orientation="horizontal" android:layout_gravity="center"
+        	    android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+        	    android:layout_marginTop="5dp" android:layout_marginBottom="7dp">
+        	    <EditText android:id="@+id/et_chineseyear"
+        	         android:layout_width="70dp" android:layout_height="50dp"
+        	        android:textSize="20sp"
+					android:gravity="center" android:layout_marginBottom="2dp"
+					android:textColor="@color/wifidialog_normal_text_color"
+					 android:textAppearance="?android:attr/textAppearanceMedium"
+					 android:singleLine="true" android:layout_weight="2"
+					 android:numeric="integer"/>
+        	      <TextView android:id="@+id/wifi_title_tv" android:text="年"
+					android:layout_height="wrap_content"  android:layout_width="wrap_content" android:textSize="20sp"
+					android:gravity="center" android:layout_marginBottom="2dp"
+					android:textColor="@color/wifidialog_normal_text_color"
+					 android:textAppearance="?android:attr/textAppearanceMedium" 
+					 android:layout_marginLeft="1dp" android:layout_marginRight="1dp"/>
+        	       <EditText android:id="@+id/et_chinesemonth"
+        	           android:layout_width="50dp" android:layout_height="50dp"
+        	        android:textSize="20sp"
+					android:gravity="center" android:layout_marginBottom="2dp"
+					android:textColor="@color/wifidialog_normal_text_color"
+					 android:textAppearance="?android:attr/textAppearanceMedium"
+					 android:singleLine="true" android:layout_weight="1"
+					 android:numeric="integer"/>
+        	      <TextView android:id="@+id/wifi_title_tv" android:text="月"
+					android:layout_height="wrap_content"  android:layout_width="wrap_content" android:textSize="20sp"
+					android:gravity="center" android:layout_marginBottom="2dp"
+					android:textColor="@color/wifidialog_normal_text_color"
+					 android:textAppearance="?android:attr/textAppearanceMedium"
+					  android:layout_marginLeft="1dp" android:layout_marginRight="1dp" />
+        	       <EditText android:id="@+id/et_chineseday"
+        	           android:layout_width="50dp" android:layout_height="50dp"
+        	        android:textSize="20sp"
+					android:gravity="center" android:layout_marginBottom="2dp"
+					android:textColor="@color/wifidialog_normal_text_color"
+					 android:textAppearance="?android:attr/textAppearanceMedium"
+					 android:singleLine="true" android:layout_weight="1"
+					 android:numeric="integer"/>
+        	      <TextView android:id="@+id/wifi_title_tv" android:text="日"
+					android:layout_height="wrap_content"  android:layout_width="wrap_content" android:textSize="20sp"
+					android:gravity="center" android:layout_marginBottom="2dp"
+					android:textColor="@color/wifidialog_normal_text_color"
+					 android:textAppearance="?android:attr/textAppearanceMedium"
+					  android:layout_marginLeft="1dp" android:layout_marginRight="1dp" />
+        	</LinearLayout>
+	
+		
+        
+    </LinearLayout>
+    
+     <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:layout_weight="1" android:layout_gravity="center" 
+        android:orientation="horizontal" android:layout_marginTop="15dp" android:layout_marginBottom="15dp"
+        android:layout_marginLeft="30dp" android:layout_marginRight="30dp">
+		<Button android:id="@+id/wifi_dialog_ok" android:layout_width="wrap_content" android:layout_height="wrap_content" 
+		    android:layout_weight="1" android:layout_gravity="center" android:gravity="center"
+		    android:text="@string/OK" android:background="@drawable/wifi_dialog_button"
+		    android:textSize="19sp" android:layout_marginRight="5dp"
+		    android:textColor="@color/wifidialog_normal_text_color"/>
+		<Button android:id="@+id/wifi_dialog_cancle" android:layout_width="wrap_content" android:layout_height="wrap_content" 
+		    android:layout_weight="1" android:layout_gravity="center" android:gravity="center"
+		    android:text="@string/cancle" android:background="@drawable/wifi_dialog_button" 
+		    android:textSize="19sp" android:layout_marginLeft="5dp"
+		    android:textColor="@color/wifidialog_normal_text_color"/>
+      </LinearLayout>
+    
+
+</LinearLayout>

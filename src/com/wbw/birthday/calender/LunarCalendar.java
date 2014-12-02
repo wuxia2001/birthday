@@ -14,7 +14,7 @@ public class LunarCalendar {
 	private boolean leap;
 	public int leapMonth = 0;   //闰的是哪个月
 	
-	final static String chineseNumber[] = { "一", "二", "三", "四", "五", "六", "七",
+	public final static String chineseNumber[] = { "一", "二", "三", "四", "五", "六", "七",
 			"八", "九", "十", "十一", "十二" };
 	static SimpleDateFormat chineseDateFormat = new SimpleDateFormat(
 			"yyyy年MM月dd日");
@@ -486,7 +486,7 @@ public class LunarCalendar {
 			setLunarMonth(chineseNumber[month - 1] + "月");  //设置对应的阴历月份
 			day = offset + 1;
 
-		    int[] chinesedate = {year,month-1,day};
+		    int[] chinesedate = {year,month,day};
 		    return chinesedate;
 			//	return chineseNumber[month - 1] + "月"+getChinaDayString(day);
 

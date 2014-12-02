@@ -1,10 +1,18 @@
 package com.wbw.birthday;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+
+
 import com.wbw.birthday.calender.LunarCalendar;
+import com.wbw.birthday.data.BirthdayInfoXml;
+import com.wbw.birthday.data.SharedPreferencesXml;
+import com.wbw.birthday.info.BirthdayInfo;
+import com.wbw.birthday.util.Comments;
+import com.wbw.birthday.util.Util;
 import com.wbw.birthday.widget.CalendarView;
 import com.wbw.birthday.widget.dialog.TimerPickDialog;
 
@@ -17,6 +25,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -24,8 +34,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 public class AddBirthdayActivity extends Activity{
+	
+    private AnimationSet mModalInAnim;
+	
 	private int rilikind = 0;  //0为公历，1为农历
 	private int tixingkind = 0;  //0 1 2 3 4 5
 	private int duplicatekind = 0; //0一次     1每年
@@ -36,9 +50,10 @@ public class AddBirthdayActivity extends Activity{
     String scheduleMonth;
     String week;
   //  String chinese_year;
+    private int hh,mm;
     
-    private String chinese_year;
-    private String chinese_month,chinese_day;
+    private int chinese_year;
+    private int chinese_month,chinese_day;
     
     private String dateInfo_yangli,dateInfo_yinli;
     private LunarCalendar lcCalendar;
@@ -52,11 +67,21 @@ public class AddBirthdayActivity extends Activity{
 		scheduleMonth =  scheduleDate.get(1);
 		scheduleDay =  scheduleDate.get(2);
 		lcCalendar=new LunarCalendar();
+		
 		dateInfo_yangli=scheduleYear+"年"+scheduleMonth+"月"+scheduleDay+"日";
 		int[] chinesedate = lcCalendar.getLunarDateAll(Integer.valueOf(scheduleYear), 
 				Integer.valueOf(scheduleMonth),  Integer.valueOf(scheduleDay));
 		
-       	//先处理公历，再处理农历
+		chinese_year = chinesedate[0];
+		chinese_month = chinesedate[1];
+		chinese_day = chinesedate[2];
+		
+		dateInfo_yinli = chinese_year+"年"+lcCalendar.chineseNumber[chinese_month - 1]+"月"+lcCalendar.getChinaDayString(chinese_day);
+       	
+		   mModalInAnim = (AnimationSet) Util.init().loadAnimation(this, R.anim.modal_in);
+		      
+		
+		//先处理公历，再处理农历
 		findAllViews();
 		setDefaults();
 //		setImages();
@@ -104,11 +129,68 @@ public class AddBirthdayActivity extends Activity{
 		final Calendar calendar = Calendar.getInstance();   
         final int hour   = calendar.get(Calendar.HOUR_OF_DAY);  
         final int minute = calendar.get(Calendar.MINUTE);
+        hh = hour;
+        mm = minute;
         tv_select_hour.setText(hour+"时"+minute+"分");
 	}
 	
 	
 	private void createAction(){
+		iv_complete.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				String nameString = et_inputname.getText().toString();
+				if(nameString == null || nameString.equals("")){
+					Toast.makeText(AddBirthdayActivity.this, "名称不能为空", 
+							Toast.LENGTH_SHORT).show();
+					return;
+				}
+				int id =Integer.valueOf(SharedPreferencesXml.init().getConfigSharedPreferences("id_max", "0"));
+				id++;
+				SharedPreferencesXml.init().setConfigSharedPreferences("id_max", String.valueOf(id));
+				BirthdayInfo birthdayInfo = new BirthdayInfo();
+				birthdayInfo.setAlarmkind(tixingkind);
+				birthdayInfo.setDuplicatekind(duplicatekind);
+				birthdayInfo.setName(et_inputname.getText().toString());
+				birthdayInfo.setRemark(et_inputremark.getText().toString());
+				birthdayInfo.setId(String.valueOf(id));
+				birthdayInfo.setKind(rilikind);
+				birthdayInfo.setTimeofday(hh+":"+mm);
+				if(rilikind == 1){
+					birthdayInfo.setYear(chinese_year);
+					birthdayInfo.setMonth(chinese_month);
+					
+					birthdayInfo.setDay(chinese_day);
+				}else
+				{				
+					birthdayInfo.setYear(Integer.valueOf(scheduleYear));
+					birthdayInfo.setMonth(Integer.valueOf(scheduleMonth));
+					
+					birthdayInfo.setDay(Integer.valueOf(scheduleDay));
+				}
+				BirthdayInfo.binfo_list.add(birthdayInfo);
+				try {
+					BirthdayInfoXml.instance().saveBirthdayInfoXml(BirthdayInfo.binfo_list,
+							Comments.BasePath+Comments.xml_name);
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Toast.makeText(AddBirthdayActivity.this, "添加成功", 
+						Toast.LENGTH_SHORT).show();
+				AddBirthdayActivity.this.finish();
+					
+			}
+		});
+		
 		iv_return.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -170,6 +252,25 @@ public class AddBirthdayActivity extends Activity{
 				timePickDialog();
 			}
 		});
+		
+		tv_select_year.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				setOptionSelectYear();
+			}
+		});
+	}
+	
+	
+	private void setOptionSelectYear(){
+		if(rilikind == 1){
+			chineseyearPickDialog();
+		}else{
+			//公历
+			yearPickDialog();
+		}
 	}
 	
 	//日历各类的选择
@@ -181,16 +282,17 @@ public class AddBirthdayActivity extends Activity{
 		String meitu = getString(R.string.select_rili);
 		String every = getString(R.string.everty_year);
 	//	String yeartString = tv_select_year.getText().toString();
-		if(num == 0 ){
+		if(num == 0 ){  //公历
 			bt_option_gongli.setBackgroundResource(R.drawable.option_select);
-			
+			tv_select_year.setText(dateInfo_yangli);
 			String yeartString = tv_select_year.getText().toString();
 			meitu = String.format(meitu, bt_option_gongli.getText().toString());
 			every = String.format(every, bt_option_gongli.getText().toString(),yeartString);
 		}else
 		if(num == 1 ){
 			bt_option_nongli.setBackgroundResource(R.drawable.option_select);
-			
+			//农历
+			tv_select_year.setText(dateInfo_yinli);
 			String yeartString = tv_select_year.getText().toString();
 			meitu = String.format(meitu, bt_option_nongli.getText().toString());
 			every = String.format(every, bt_option_nongli.getText().toString(),yeartString);
@@ -277,12 +379,141 @@ public class AddBirthdayActivity extends Activity{
 				// TODO 自动生成的方法存根
 				int h = timerPicker.getCurrentHour();
 				int m = timerPicker.getCurrentMinute();
-				tv_select_hour.setText(h+"点"+m+"分");
-					
+				tv_select_hour.setText(h+"时"+m+"分");
+				hh = h;
+				mm = m;
 				if(dialog.isShowing())
 					dialog.dismiss();
 			}
 		});
+		dialog.show();
+		
+	}
+	
+	
+	private void yearPickDialog(){
+		LayoutInflater inf = LayoutInflater.from(AddBirthdayActivity.this); 		
+		final View view = inf.inflate(R.layout.dialog_timepick, null);  		
+		Button ok = (Button) view.findViewById(R.id.wifi_dialog_ok);
+		Button cancle = (Button) view.findViewById(R.id.wifi_dialog_cancle);	
+		final DatePicker datePicker = (DatePicker) view.findViewById(R.id.datePicker);
+		datePicker.updateDate(Integer.valueOf(scheduleYear), 
+				Integer.valueOf(scheduleMonth)-1, Integer.valueOf(scheduleDay));
+		final Dialog dialog = new Dialog(AddBirthdayActivity.this, R.style.MyDialog);
+		//dialog.setView(view , 0, 0, 0, 0 );
+		dialog.setContentView(view);		
+		cancle.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO 自动生成的方法存根
+				if(dialog.isShowing())
+					dialog.dismiss();
+			}
+		});
+		
+		ok.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO 自动生成的方法存根
+				 int year = datePicker.getYear();
+				 int month = datePicker.getMonth() ; 
+				 int dayOfMonth = datePicker.getDayOfMonth();
+				 if(year < 1901 || year > 2049){
+						//不在查询范围内
+						new AlertDialog.Builder(AddBirthdayActivity.this).setTitle("错误日期").setMessage("请选择日期范围(1901/1/1-2049/12/31)").setPositiveButton("确认", null).show();
+				}else{
+					
+				        scheduleYear = String.valueOf(year);
+						scheduleMonth = String.valueOf(month+1);
+						scheduleDay = String.valueOf(dayOfMonth);
+						dateInfo_yangli=scheduleYear+"年"+scheduleMonth+"月"+scheduleDay+"日";
+						int[] chinesedate = lcCalendar.getLunarDateAll(Integer.valueOf(scheduleYear), 
+								Integer.valueOf(scheduleMonth),  Integer.valueOf(scheduleDay));
+						
+						chinese_year = chinesedate[0];
+						chinese_month = chinesedate[1];
+						chinese_day = chinesedate[2];
+						
+						dateInfo_yinli = chinese_year+"年"+lcCalendar.chineseNumber[chinese_month-1]+"月"+lcCalendar.getChinaDayString(chinese_day);
+				       	
+						tv_select_year.setText(dateInfo_yangli);
+					}
+				if(dialog.isShowing())
+					dialog.dismiss();
+			}
+		});
+//		 Window window = dialog.getWindow();  
+//		 window.set
+//		 //   window.setGravity(Gravity.BOTTOM);  //此处可以设置dialog显示的位置  
+//		        window.setWindowAnimations(R.anim.modal_in);  //添加动画  
+		View mDialogView = dialog.getWindow().getDecorView().findViewById(android.R.id.content);
+		 mDialogView.startAnimation(mModalInAnim);
+		dialog.show();
+		
+	}
+	
+	private void chineseyearPickDialog(){
+		LayoutInflater inf = LayoutInflater.from(AddBirthdayActivity.this); 		
+		final View view = inf.inflate(R.layout.dialog_chinese_yearpick, null);  		
+		Button ok = (Button) view.findViewById(R.id.wifi_dialog_ok);
+		Button cancle = (Button) view.findViewById(R.id.wifi_dialog_cancle);	
+		final EditText et_chineseday = (EditText) view.findViewById(R.id.et_chineseday);
+		final EditText et_chinesemonth = (EditText) view.findViewById(R.id.et_chinesemonth);
+		final EditText et_chineseyear = (EditText) view.findViewById(R.id.et_chineseyear);
+		final Dialog dialog = new Dialog(AddBirthdayActivity.this, R.style.MyDialog);
+		//dialog.setView(view , 0, 0, 0, 0 );
+		dialog.setContentView(view);		
+		cancle.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO 自动生成的方法存根
+				if(dialog.isShowing())
+					dialog.dismiss();
+			}
+		});
+		
+		ok.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO 自动生成的方法存根
+				try{
+					int year = Integer.valueOf(et_chineseyear.getText().toString());
+					int month = Integer.valueOf(et_chinesemonth.getText().toString());
+					int day = Integer.valueOf(et_chineseday.getText().toString());
+					 if(year < 1901 || year > 2049){
+							//不在查询范围内
+							new AlertDialog.Builder(AddBirthdayActivity.this).setTitle("错误日期").setMessage("请选择日期范围(1901/1/1-2049/12/31)").setPositiveButton("确认", null).show();
+							return;
+					}
+					 if(month<=0 || month>12){
+							new AlertDialog.Builder(AddBirthdayActivity.this).setTitle("错误日期").setMessage("请选择日期范围(1901/1/1-2049/12/31)").setPositiveButton("确认", null).show();
+							return;
+					 }
+					 if(day<=0 || day>30){
+							new AlertDialog.Builder(AddBirthdayActivity.this).setTitle("错误日期").setMessage("请选择日期范围(1901/1/1-2049/12/31)").setPositiveButton("确认", null).show();
+							return;
+					 }
+					 chinese_year = year;
+						chinese_month = month;
+						chinese_day = day;
+						
+						dateInfo_yinli = chinese_year+"年"+lcCalendar.chineseNumber[chinese_month-1]+"月"+lcCalendar.getChinaDayString(chinese_day);
+				       	
+						tv_select_year.setText(dateInfo_yinli);
+				}catch(Exception e){
+					
+				}
+				
+				if(dialog.isShowing())
+					dialog.dismiss();
+			}
+		});
+		View mDialogView = dialog.getWindow().getDecorView().findViewById(android.R.id.content);
+		 mDialogView.startAnimation(mModalInAnim);
 		dialog.show();
 		
 	}
