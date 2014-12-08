@@ -21,6 +21,10 @@ import java.util.HashMap;
 
 
 
+
+
+
+
 import org.xmlpull.v1.XmlPullParserException;
 
 import com.wbw.birthday.data.BirthdayInfoXml;
@@ -39,6 +43,8 @@ import com.wbw.birthday.widget.dialog.TimerPickDialog;
 
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.R.bool;
 import android.R.integer;
 import android.annotation.SuppressLint;
@@ -73,6 +79,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
+import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -101,7 +108,7 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 	private String currentDate = "";
 	private ViewFlipper flipper = null;
 	private GestureDetector gestureDetector = null;
-	private CalendarView calV = null;
+	private CalendarView calV = null,left_calView = null;
 	private GridView gridView = null;
 	private TextView topText = null;
 	private Drawable draw = null;
@@ -118,6 +125,9 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 	private LayoutInflater inflater;
 	private Context mContext;
 	private  ArrayList<String> scheduleDate;
+	
+	LayoutAnimationController animation_s = null ;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +146,8 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
     	
     	   mModalInAnim = (AnimationSet) Util.init().loadAnimation(this, R.anim.modal_in);
 		      
-   		
+    	   animation_s = AnimationUtils.loadLayoutAnimation(mContext, R.anim.layout_random_fade);
+    		
     	
     	 //处理外部存储
 		 boolean sdCardExist = Environment.getExternalStorageState()
@@ -198,6 +209,10 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 	        int w = getScreenWith();
 	        calV = new CalendarView(this, getResources(),
 	        		jumpMonth,jumpYear,year_c,month_c,day_c,w);
+	        
+	        left_calView = new CalendarView(this, getResources(),
+	        		jumpMonth+1,jumpYear,year_c,month_c,day_c,getScreenWith());
+	        
 	        
 	        addGridView();
 	        gridView.setAdapter(calV);
@@ -450,25 +465,32 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 		return false;
 	}
 	
+	private final int changeleft = 1;
+	private final int changeright = 2;
+	 Handler handler = new Handler() {
+	        public void handleMessage(Message msg) {
+	            switch (msg.what) {
+	                case changeleft:
+	                    left_calView = new CalendarView(MainActivity.this, getResources(),jumpMonth+1,jumpYear,year_c,month_c,day_c,getScreenWith());
+	                	break;
+	            }
+	        }
+	 };
 	//向左滑动
 	private void gotoLeft(int gvFlag){
-		addGridView();   //添加一个gridView
+		//addGridView();   //添加一个gridView
+		gridView.setLayoutAnimation(animation_s);
 		jumpMonth++;     //下一个月
-		
-		calV = new CalendarView(this, getResources(),jumpMonth,jumpYear,year_c,month_c,day_c,getScreenWith());
+		calV = (CalendarView) left_calView.clone();  //对象复制，为了加快速
+		  addTextToTopTextView(topText);
+//        flipper.removeAllViews();
+//        flipper.addView(gridView, 0);
         gridView.setAdapter(calV);
-        //flipper.addView(gridView);
-        addTextToTopTextView(topText);
-        gvFlag++;
-        flipper.addView(gridView, gvFlag);
-		this.flipper.setInAnimation(AnimationUtils.loadAnimation(this,R.anim.push_left_in));
-		this.flipper.setOutAnimation(AnimationUtils.loadAnimation(this,R.anim.push_left_out));
-		this.flipper.showNext();
-		flipper.removeViewAt(0);
+		handler.sendEmptyMessage(changeleft);
 	}
 	
 	private void gotoRight(int gvFlag){
-		addGridView();   //添加一个gridView
+//		addGridView();   //添加一个gridView
 		jumpMonth--;     //上一个月
 		
 		calV = new CalendarView(this, getResources(),jumpMonth,jumpYear,year_c,month_c,day_c,getScreenWith());
@@ -575,12 +597,12 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
         Display display = windowManager.getDefaultDisplay();
         int Width = display.getWidth(); 
         int Height = display.getHeight();
-        
-        Log.d(Tag, "屏幕分辨率=="+"height*weight"+Height+Width);
+
         
 		gridView = new GridView(this);
 		gridView.setNumColumns(7);
 		gridView.getHeight();
+		gridView.setLayoutAnimation(animation_s);
 		//gridView.
 //		gridView.setColumnWidth(46);
 //	//	gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);

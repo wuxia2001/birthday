@@ -8,13 +8,13 @@ public class BirthdayInfo {
 	private String id;
 	private String name;   //名字
 	private String remark;  //备注
-	private int kind;   //公历或阴历
+	private int kind;   //公历或阴历//0为公历，1为农历
 	private int year;   //年
 	private int month;  //月+1
 	private int day;    //日
 	private String timeofday;  //hh:MM
 	private int alarmkind;   //提示方式       0分钟前，10分钟前，30分钟前，1小时前，2小时前，5小时间前
-	private int duplicatekind; //重复方式   一次性活动，每年（阴历几月几，阳历几月几）
+	private int duplicatekind; //重复方式   一次性活动，每年（阴历几月几，阳历几月几）/0一次     1每年
 	
 	public static List<BirthdayInfo> binfo_list = new ArrayList<BirthdayInfo>();
 	public String getName() {

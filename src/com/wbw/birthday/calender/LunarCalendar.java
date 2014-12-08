@@ -397,6 +397,12 @@ public class LunarCalendar {
 
 	}
 	
+	public int[] getSimapleLunarDateAll() {
+		 int[] chinesedate = {year,month,day};
+		    return chinesedate;
+	
+	}
+	
 	//返回阴历几月初几
 		public int[] getLunarDateAll(int year_log, int month_log, int day_log) {
 			// @SuppressWarnings("unused")
@@ -483,8 +489,10 @@ public class LunarCalendar {
 				--monCyl;
 			}
 			month = iMonth;
+			setMonth(month);
 			setLunarMonth(chineseNumber[month - 1] + "月");  //设置对应的阴历月份
 			day = offset + 1;
+			setDay(day);
 
 		    int[] chinesedate = {year,month,day};
 		    return chinesedate;
@@ -539,6 +547,23 @@ public class LunarCalendar {
 	public void setYear(int year) {
 		this.year = year;
 	}
+
+	public int getMonth() {
+		return month;
+	}
+
+	public void setMonth(int month) {
+		this.month = month;
+	}
+
+	public int getDay() {
+		return day;
+	}
+
+	public void setDay(int day) {
+		this.day = day;
+	}
+	
 	
 	
 	

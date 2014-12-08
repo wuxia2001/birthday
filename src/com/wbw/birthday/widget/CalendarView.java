@@ -5,10 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import com.wbw.birthday.R;
 import com.wbw.birthday.calender.LunarCalendar;
 import com.wbw.birthday.calender.SpecialCalendar;
+import com.wbw.birthday.info.BirthdayInfo;
+
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -40,7 +43,7 @@ import android.widget.TextView;
  *
  */
 @SuppressLint("ResourceAsColor")
-public class CalendarView extends BaseAdapter {
+public class CalendarView extends BaseAdapter implements Cloneable{
 	
 	private static final String Tag="CalendarView";
 
@@ -64,8 +67,6 @@ public class CalendarView extends BaseAdapter {
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-d");
 	private int currentFlag = -1;     //用于标记当天
-	private int[] schDateTagFlag = null;  //存储当月所有的日程安排的日期
-	
 	private String showYear = "";   //用于在头部显示的年份
 	private String showMonth = "";  //用于在头部显示的月份
 	private String animalsYear = ""; 
@@ -77,11 +78,7 @@ public class CalendarView extends BaseAdapter {
 	private String sys_month = "";
 	private String sys_day = "";
 	
-	//日程时间(需要标记的日程日期)
-	private String sch_year = "";
-	private String sch_month = "";
-	private String sch_day = "";
-	
+
 	private int screenwidth;
 	
 	public CalendarView(){
@@ -158,17 +155,33 @@ public class CalendarView extends BaseAdapter {
 		// TODO Auto-generated method stub
 		return position;
 	}
+	
+	  private class ViewHolder {
+	      
+		  TextView textView;
+	        public ViewHolder(View view) {
+	        	 textView = (TextView) view.findViewById(R.id.tvtext);
+	        }
+	    }
 
 	//给Gridview添加值
 	@SuppressLint("ResourceAsColor")
 	public View getView(int position, View convertView, ViewGroup parent) {
-
-		if(convertView == null){
-			convertView = LayoutInflater.from(context).inflate(R.layout.calendar, null);
-		 }
-		TextView textView = (TextView) convertView.findViewById(R.id.tvtext);
+		 ViewHolder holder;
+	     if (convertView != null) {
+	          holder = (ViewHolder) convertView.getTag();
+	    } else {
+	        	convertView = LayoutInflater.from(context).inflate(R.layout.calendar, null);	    		
+	            holder = new ViewHolder(convertView);
+	            convertView.setTag(holder);
+	        }
+//		if(convertView == null){
+//			convertView = LayoutInflater.from(context).inflate(R.layout.calendar, null);
+//		 }
+		TextView textView = holder.textView;
 		String d = dayNumber[position].split("\\.")[0];
 		String dv = dayNumber[position].split("\\.")[1];
+		String f = dayNumber[position].split("\\.")[2];
 		Log.i("calendarview", d+","+dv);
 		//Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/Helvetica.ttf");
 		//textView.setTypeface(typeface);
@@ -180,9 +193,9 @@ public class CalendarView extends BaseAdapter {
 		sp.setSpan(new RelativeSizeSpan(1.2f) , 0, d.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		sp.setSpan(new TypefaceSpan("monospace"), 0, d.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		//sp.setSpan(new BackgroundColorSpan(Color.RED), 0, d.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		if(dv != null || dv != ""){
+		if(dv != null && dv != "" && !dv.equals(" ") && !dv.trim().equals("")){
 			//农历显示的样式
-            sp.setSpan(new RelativeSizeSpan(0.75f), d.length()+1, dayNumber[position].length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            sp.setSpan(new RelativeSizeSpan(0.75f), d.length()+1, d.length()+dv.length()+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             //sp.setSpan(new BackgroundColorSpan(Color.RED), d.length()+1, dayNumber[position].length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		}
 		
@@ -190,14 +203,13 @@ public class CalendarView extends BaseAdapter {
 		//textView.setTextColor(R.color.little_grey);
 		textView.setTextColor(Color.RED);
 		
-		drawable = res.getDrawable(R.drawable.item);
-		textView.setBackgroundDrawable(drawable);
+		//if(drawable == null)
+//			drawable = res.getDrawable(R.drawable.item);
+//		textView.setBackgroundDrawable(drawable);
+		textView.setBackgroundResource(R.drawable.item);
 		
 		// 当前月字体属性，设字体和背景
-		if (position < daysOfMonth + firstDayOfMonth+7 && position >= firstDayOfMonth+7) {
-			
-			
-			
+		if (position < daysOfMonth + firstDayOfMonth+7 && position >= firstDayOfMonth+7) {			
 			textView.setTextColor(Color.BLACK);// 当月字体设黑
 			
 			//textView.setBackgroundColor(Color.WHITE);
@@ -214,8 +226,9 @@ public class CalendarView extends BaseAdapter {
 				textView.setTextColor(Color.BLACK);
 				textView.setTextSize(14.0f);
 //				textView.setGravity(45);
-				drawable = res.getDrawable(R.drawable.week_top);
-				textView.setBackgroundDrawable(drawable);
+				//drawable = res.getDrawable(R.drawable.week_top);
+				//textView.setBackgroundDrawable(drawable);
+				textView.setBackgroundResource(R.drawable.week_top);
 			}
 			//设置当月其他不在月内显示的字体为浅灰色
 			else{
@@ -223,20 +236,17 @@ public class CalendarView extends BaseAdapter {
 				textView.setTextColor(Color.rgb(200, 195, 200));
 			}
 		}
-		if(schDateTagFlag != null && schDateTagFlag.length >0){
-			for(int i = 0; i < schDateTagFlag.length; i++){
-				if(schDateTagFlag[i] == position){
+		
 					//设置有日程安排的标记背景
-					
-					textView.setBackgroundResource(R.drawable.mark);
-				}
-			}
-		}
+		if(Boolean.valueOf(f))		
+			textView.setBackgroundResource(R.drawable.mark);
+//		
 		//设置当天的背景
 		if(currentFlag == position){ 
 			
-			drawable = res.getDrawable(R.drawable.current_day_bgc);
-			textView.setBackgroundDrawable(drawable);
+			//drawable = res.getDrawable(R.drawable.current_day_bgc);
+			//textView.setBackgroundDrawable(drawable);
+			textView.setBackgroundResource(R.drawable.current_day_bgc);
 			textView.setTextColor(Color.WHITE);
 		}
 		//获得每个月的周末
@@ -248,15 +258,10 @@ public class CalendarView extends BaseAdapter {
 		
 		int l = textView.getHeight();
 		 LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) textView.getLayoutParams();
-         //lp.height = getScreenWith() / 3 * 4;
-         //首页图片比例，改为1：1  16:9
-		// lp.\
 		 lp.width = screenwidth/7;
 		 
          lp.height = lp.width+10;
-        // lp.topMargin = 5;
-       //  lp.bottomMargin = 5;
-       //  lp.
+       
          textView.setLayoutParams(lp);
 		return convertView;
 	}
@@ -277,48 +282,33 @@ public class CalendarView extends BaseAdapter {
 		int j = 1;
 		int flag = 0;
 		String lunarDay = "";
-//		
-//		//得到当前月的所有日程日期(这些日期需要标记并计数)
-//		dao = new ScheduleDAO(context);
-//		ArrayList<ScheduleDateTag> dateTagList = dao.getTagDate(year,month);
-//		if(dateTagList != null && dateTagList.size() > 0){
-//			schDateTagFlag = new int[dateTagList.size()];
-//		}
+
 //		
 		for (int i = 0; i < dayNumber.length; i++) {
 			// 周一
 			if(i<7){
-				dayNumber[i]=week[i]+"."+" ";
+				dayNumber[i]=week[i]+"."+" "+"."+" ";
 			}
 			else if(i < firstDayOfMonth+7){  //前一个月
 				int temp = lastDaysOfMonth - firstDayOfMonth+1-7;
 				//获得阳历对应的农历
+				
 				lunarDay = lunarCalendar.getLunarDate(year, month-1, temp+i,false);
-				dayNumber[i] = (temp + i)+"."+lunarDay;
+				boolean f = matchScheduleDate(year,month-1,temp+i);
+				dayNumber[i] = (temp + i)+"."+lunarDay+"."+String.valueOf(f);
 			}else if(i < daysOfMonth + firstDayOfMonth+7){   //本月
 				String day = String.valueOf(i-firstDayOfMonth+1-7); 
 				//得到的日期
 				lunarDay = lunarCalendar.getLunarDate(year, month, i-firstDayOfMonth+1-7,false);
-				dayNumber[i] = i-firstDayOfMonth+1-7+"."+lunarDay;
+				boolean f = matchScheduleDate(year,month,i-firstDayOfMonth+1-7);
+				dayNumber[i] = i-firstDayOfMonth+1-7+"."+lunarDay+"."+String.valueOf(f);
 				//对于当前月才去标记当前日期
 				if(sys_year.equals(String.valueOf(year)) && sys_month.equals(String.valueOf(month)) && sys_day.equals(day)){
 					//标记当前日期
 					currentFlag = i;
 				}
 				
-//				//标记日程日期
-//				if(dateTagList != null && dateTagList.size() > 0){
-//					for(int m = 0; m < dateTagList.size(); m++){
-//						ScheduleDateTag dateTag = dateTagList.get(m);
-//						int matchYear = dateTag.getYear();
-//						int matchMonth = dateTag.getMonth();
-//						int matchDay = dateTag.getDay();
-//						if(matchYear == year && matchMonth == month && matchDay == Integer.parseInt(day)){
-//							schDateTagFlag[flag] = i;
-//							flag++;
-//						}
-//					}
-//				}
+
 				
 				setShowYear(String.valueOf(year));
 				setShowMonth(String.valueOf(month));
@@ -327,7 +317,8 @@ public class CalendarView extends BaseAdapter {
 				setCyclical(lunarCalendar.cyclical(year));
 			}else{   //下一个月
 				lunarDay = lunarCalendar.getLunarDate(year, month+1, j,false);
-				dayNumber[i] = j+"."+lunarDay;
+				boolean f = matchScheduleDate(year,month+1,j);
+				dayNumber[i] = j+"."+lunarDay+"."+String.valueOf(f);
 				j++; 
 			}
 		}
@@ -342,7 +333,57 @@ public class CalendarView extends BaseAdapter {
 	}
 	
 	
-	public void matchScheduleDate(int year, int month, int day){
+	
+	/**
+	 * 传入公历年月日，匹配是否有
+	 * @param year
+	 * @param month
+	 * @param day
+	 */
+	public boolean matchScheduleDate(int year, int month, int day){
+		List<BirthdayInfo> list = BirthdayInfo.binfo_list;
+		for(int i=0;i<list.size();i++){
+			BirthdayInfo tmpBirthdayInfo = list.get(i);
+			if(tmpBirthdayInfo.getKind() == 1){
+				//农历
+//				int[] chinesedate = lunarCalendar.getLunarDateAll(Integer.valueOf(year), 
+//						Integer.valueOf(month),  Integer.valueOf(day));
+				int[] chinesedate = lunarCalendar.getSimapleLunarDateAll();
+				
+				int chinese_year = chinesedate[0];
+				int chinese_month = chinesedate[1];
+				int chinese_day = chinesedate[2];
+				if(tmpBirthdayInfo.getDuplicatekind() == 0){
+					//一次性活动，要对年
+					if(tmpBirthdayInfo.getYear() == chinese_year && tmpBirthdayInfo.getMonth() == chinese_month
+							&& tmpBirthdayInfo.getDay() == chinese_day){
+						return true;
+					}
+				}else{
+					//每年的，只对月和日
+					if(tmpBirthdayInfo.getMonth() == chinese_month
+							&& tmpBirthdayInfo.getDay() == chinese_day){
+						return true;
+					}
+				}
+			}else{
+				//公历
+				if(tmpBirthdayInfo.getDuplicatekind() == 0){
+					//一次性活动，要对年
+					if(tmpBirthdayInfo.getYear() == year && tmpBirthdayInfo.getMonth() == month
+							&& tmpBirthdayInfo.getDay() == day){
+						return true;
+					}
+				}else{
+					//每年的，只对月和日
+					if(tmpBirthdayInfo.getMonth() == month
+							&& tmpBirthdayInfo.getDay() == day){
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 		
 	}
 	
@@ -410,4 +451,15 @@ public class CalendarView extends BaseAdapter {
 	public void setCyclical(String cyclical) {
 		this.cyclical = cyclical;
 	}
+	
+	  @Override
+	public Object clone() {  
+		   CalendarView o = null;
+	        try{
+	            o = (CalendarView)super.clone();
+	        }catch(CloneNotSupportedException e){
+	            e.printStackTrace();
+	        } 
+	        return o;
+	    }  
 }
