@@ -2,7 +2,11 @@ package com.wbw.birthday.calender;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import com.wbw.birthday.info.BirthdayInfo;
 
 import android.util.Log;
 
@@ -489,10 +493,10 @@ public class LunarCalendar {
 				--monCyl;
 			}
 			month = iMonth;
-			setMonth(month);
+			//setMonth(month);
 			setLunarMonth(chineseNumber[month - 1] + "月");  //设置对应的阴历月份
 			day = offset + 1;
-			setDay(day);
+			//setDay(day);
 
 		    int[] chinesedate = {year,month,day};
 		    return chinesedate;
@@ -548,22 +552,81 @@ public class LunarCalendar {
 		this.year = year;
 	}
 
-	public int getMonth() {
-		return month;
-	}
-
-	public void setMonth(int month) {
-		this.month = month;
-	}
-
-	public int getDay() {
-		return day;
-	}
-
-	public void setDay(int day) {
-		this.day = day;
-	}
+//	public int getMonth() {
+//		return month;
+//	}
+//
+//	public void setMonth(int month) {
+//		this.month = month;
+//	}
+//
+//	public int getDay() {
+//		return day;
+//	}
+//
+//	public void setDay(int day) {
+//		this.day = day;
+//	}
 	
+
+	/**
+	 * 传入公历年月日，传出匹配的串
+	 * @param year
+	 * @param month
+	 * @param day
+	 */
+	public List<BirthdayInfo> matchScheduleDateList(int year, int month, int day){
+		List<BirthdayInfo> list = BirthdayInfo.binfo_list;
+		List<BirthdayInfo> getlist = new ArrayList<BirthdayInfo>();
+		for(int i=0;i<list.size();i++){
+			BirthdayInfo tmpBirthdayInfo = list.get(i);
+			if(tmpBirthdayInfo.getKind() == 1){
+				//农历
+//				int[] chinesedate = lunarCalendar.getLunarDateAll(Integer.valueOf(year), 
+//						Integer.valueOf(month),  Integer.valueOf(day));
+				int[] chinesedate = getSimapleLunarDateAll();
+				
+				int chinese_year = chinesedate[0];
+				int chinese_month = chinesedate[1];
+				int chinese_day = chinesedate[2];
+				if(tmpBirthdayInfo.getDuplicatekind() == 0){
+					//一次性活动，要对年
+					if(tmpBirthdayInfo.getYear() == chinese_year && tmpBirthdayInfo.getMonth() == chinese_month
+							&& tmpBirthdayInfo.getDay() == chinese_day){
+						//return true;
+						getlist.add(tmpBirthdayInfo);
+						continue;
+					}
+				}else{
+					//每年的，只对月和日
+					if(tmpBirthdayInfo.getMonth() == chinese_month
+							&& tmpBirthdayInfo.getDay() == chinese_day){
+						getlist.add(tmpBirthdayInfo);
+						continue;
+					}
+				}
+			}else{
+				//公历
+				if(tmpBirthdayInfo.getDuplicatekind() == 0){
+					//一次性活动，要对年
+					if(tmpBirthdayInfo.getYear() == year && tmpBirthdayInfo.getMonth() == month
+							&& tmpBirthdayInfo.getDay() == day){
+						getlist.add(tmpBirthdayInfo);
+						continue;
+					}
+				}else{
+					//每年的，只对月和日
+					if(tmpBirthdayInfo.getMonth() == month
+							&& tmpBirthdayInfo.getDay() == day){
+						getlist.add(tmpBirthdayInfo);
+						continue;
+					}
+				}
+			}
+		}
+		return getlist;
+		
+	}
 	
 	
 	

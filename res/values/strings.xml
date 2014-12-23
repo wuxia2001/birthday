@@ -13,6 +13,7 @@
 	<string name="set_time">选择时间</string>
 	<string name="nongli">农历</string>
 	<string name="noanpai">暂无安排</string>
+	<string name="anpai">日程安排</string>
 	<string name="input_name">请输入日程名称</string>
 	<string name="input_remark">备注，请输入日程内容或其他信息</string>
 	<string name="select_rili">你选择日历种类是：%s</string>

@@ -16,6 +16,9 @@ public class BirthdayInfo {
 	private int alarmkind;   //提示方式       0分钟前，10分钟前，30分钟前，1小时前，2小时前，5小时间前
 	private int duplicatekind; //重复方式   一次性活动，每年（阴历几月几，阳历几月几）/0一次     1每年
 	
+	//名字（备注）
+	//公历（农历）每年（2014年）10月10日8：8
+	//提示方式：0分钟
 	public static List<BirthdayInfo> binfo_list = new ArrayList<BirthdayInfo>();
 	public String getName() {
 		return name;

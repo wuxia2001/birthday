@@ -387,6 +387,7 @@ public class CalendarView extends BaseAdapter implements Cloneable{
 		
 	}
 	
+	
 	/**
 	 * 点击每一个item时返回item中的日期
 	 * @param position

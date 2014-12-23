@@ -108,7 +108,7 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 	private String currentDate = "";
 	private ViewFlipper flipper = null;
 	private GestureDetector gestureDetector = null;
-	private CalendarView calV = null,left_calView = null;
+	private CalendarView calV = null,left_calView = null,right_calView=null;
 	private GridView gridView = null;
 	private TextView topText = null;
 	private Drawable draw = null;
@@ -212,7 +212,8 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 	        
 	        left_calView = new CalendarView(this, getResources(),
 	        		jumpMonth+1,jumpYear,year_c,month_c,day_c,getScreenWith());
-	        
+	        right_calView = new CalendarView(this, getResources(),
+	        		jumpMonth-1,jumpYear,year_c,month_c,day_c,getScreenWith());
 	        
 	        addGridView();
 	        gridView.setAdapter(calV);
@@ -473,6 +474,10 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 	                case changeleft:
 	                    left_calView = new CalendarView(MainActivity.this, getResources(),jumpMonth+1,jumpYear,year_c,month_c,day_c,getScreenWith());
 	                	break;
+	                case changeright:
+	                	  right_calView = new CalendarView(MainActivity.this, getResources(),
+	          	        		jumpMonth-1,jumpYear,year_c,month_c,day_c,getScreenWith());
+	          	        break;
 	            }
 	        }
 	 };
@@ -482,28 +487,21 @@ public class MainActivity extends Activity implements OnGestureListener,OnClickL
 		gridView.setLayoutAnimation(animation_s);
 		jumpMonth++;     //下一个月
 		calV = (CalendarView) left_calView.clone();  //对象复制，为了加快速
-		  addTextToTopTextView(topText);
-//        flipper.removeAllViews();
-//        flipper.addView(gridView, 0);
+		addTextToTopTextView(topText);
         gridView.setAdapter(calV);
 		handler.sendEmptyMessage(changeleft);
+		   handler.sendEmptyMessage(changeright);
 	}
 	
 	private void gotoRight(int gvFlag){
 //		addGridView();   //添加一个gridView
+		gridView.setLayoutAnimation(animation_s);
 		jumpMonth--;     //上一个月
-		
-		calV = new CalendarView(this, getResources(),jumpMonth,jumpYear,year_c,month_c,day_c,getScreenWith());
-        gridView.setAdapter(calV);
-        gvFlag++;
+		calV = (CalendarView) right_calView.clone();  //对象复制，为了加快速
+		gridView.setAdapter(calV);      
         addTextToTopTextView(topText);
-        //flipper.addView(gridView);
-        flipper.addView(gridView,gvFlag);
-        
-		this.flipper.setInAnimation(AnimationUtils.loadAnimation(this,R.anim.push_right_in));
-		this.flipper.setOutAnimation(AnimationUtils.loadAnimation(this,R.anim.push_right_out));
-		this.flipper.showPrevious();
-		flipper.removeViewAt(0);
+        handler.sendEmptyMessage(changeright);
+        handler.sendEmptyMessage(changeleft);
 	}
 
 	public boolean onTouchEvent(MotionEvent event) {

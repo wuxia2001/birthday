@@ -15,6 +15,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.wbw.birthday.MainActivity"
+            android:screenOrientation="portrait"
              >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,11 +24,11 @@
             </intent-filter>
         </activity>
          <activity android:name=".ListBirthdayActivity"  android:theme="@android:style/Theme.NoTitleBar"
-			android:windowSoftInputMode="adjustPan|stateHidden"
+			android:windowSoftInputMode="adjustPan|stateHidden" android:screenOrientation="portrait"
 			android:launchMode="singleTask" 
 			android:configChanges="orientation|keyboardHidden"/>
           <activity android:name=".AddBirthdayActivity"  android:theme="@android:style/Theme.NoTitleBar"
-			android:windowSoftInputMode="adjustPan|stateHidden"
+			android:windowSoftInputMode="adjustPan|stateHidden" android:screenOrientation="portrait"
 			android:launchMode="singleTask" 
 			android:configChanges="orientation|keyboardHidden"/>
     </application>

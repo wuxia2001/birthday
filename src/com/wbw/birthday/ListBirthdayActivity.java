@@ -1,8 +1,11 @@
 package com.wbw.birthday;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.wbw.birthday.calender.LunarCalendar;
+import com.wbw.birthday.info.BirthdayInfo;
+import com.wbw.birthday.widget.ListBirthdayListAdapter;
 
 
 
@@ -16,6 +19,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,6 +33,8 @@ public class ListBirthdayActivity  extends Activity{
     String week;
     String chinese_year;
     private String dateInfo_yangli,dateInfo_yinli;
+    private List<BirthdayInfo> getlist ;
+    private BaseAdapter adapter = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,6 +50,7 @@ public class ListBirthdayActivity  extends Activity{
        	//添加农历信息	
 		dateInfo_yinli = getLunarDay(Integer.parseInt(scheduleYear),
  				Integer.parseInt(scheduleMonth), Integer.parseInt(scheduleDay));
+		
 		findAllViews();
 		setStrings();
 		createAction();
@@ -69,6 +76,25 @@ public class ListBirthdayActivity  extends Activity{
 		tv_dayandmonth.setText(dateInfo_yinli);
 		tv_lunaryear.setText(chinese_year);
 		tv_dayofweek.setText(week);
+		adapter = new ListBirthdayListAdapter(ListBirthdayActivity.this,getlist);
+		lv_list.setAdapter(adapter);
+	}
+	
+
+	@Override
+	protected void onResume() {		
+		
+		getlist = lcCalendar.matchScheduleDateList(Integer.parseInt(scheduleYear),
+ 				Integer.parseInt(scheduleMonth), Integer.parseInt(scheduleDay));
+		if(getlist.size()<=0){
+			tv_list_title.setText(R.string.noanpai);
+		}else{
+			tv_list_title.setText(R.string.anpai);
+			
+		}
+		adapter = new ListBirthdayListAdapter(ListBirthdayActivity.this,getlist);
+		lv_list.setAdapter(adapter);
+		super.onResume();
 	}
 	
 	private void createAction(){
